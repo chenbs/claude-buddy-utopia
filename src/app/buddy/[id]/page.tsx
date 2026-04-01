@@ -10,6 +10,7 @@ import {
   SpellBook,
   FloatingStars,
 } from "@/components/MagicElements";
+import { DetailPageWrapper } from "@/components/DetailPageWrapper";
 
 export const revalidate = 60;
 
@@ -38,6 +39,7 @@ export default async function BuddyDetailPage({ params }: PageProps) {
   });
 
   return (
+    <DetailPageWrapper>
     <div className="relative max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-12 sm:py-20 overflow-hidden">
       {/* Background decorations */}
       <FloatingStars />
@@ -119,5 +121,6 @@ export default async function BuddyDetailPage({ params }: PageProps) {
         <PotionBottle className="w-6 h-10 text-accent rotate-6" variant={2} />
       </div>
     </div>
+    </DetailPageWrapper>
   );
 }

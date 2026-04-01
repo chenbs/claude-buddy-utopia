@@ -301,3 +301,297 @@ body {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--card-border), transparent);
 }
+
+/* ============ MAGIC BOOK TRANSITION ============ */
+
+/* Full-screen overlay */
+.book-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: book-overlay-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  pointer-events: all;
+}
+
+@keyframes book-overlay-in {
+  0% {
+    background: transparent;
+  }
+  30% {
+    background: rgba(13, 12, 29, 0.6);
+  }
+  100% {
+    background: rgba(13, 12, 29, 0.95);
+  }
+}
+
+/* Magical glow behind the book */
+.book-glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+  animation: book-glow-pulse 1.2s ease-out forwards;
+  filter: blur(40px);
+}
+
+@keyframes book-glow-pulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0.6;
+  }
+}
+
+/* 3D book container */
+.book-container {
+  position: relative;
+  width: 500px;
+  height: 360px;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  animation: book-entrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes book-entrance {
+  0% {
+    transform: scale(0.3) rotateX(30deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+/* Each book page (half) */
+.book-page {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+}
+
+.book-page-left {
+  left: 0;
+  transform-origin: right center;
+  animation: book-page-open-left 0.8s 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform: rotateY(0deg);
+}
+
+.book-page-right {
+  right: 0;
+  transform-origin: left center;
+  animation: book-page-open-right 0.8s 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform: rotateY(0deg);
+}
+
+@keyframes book-page-open-left {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(60deg);
+  }
+}
+
+@keyframes book-page-open-right {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(-60deg);
+  }
+}
+
+/* Page face */
+.book-page-inner {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.book-page-front {
+  background: linear-gradient(135deg, #1e1b3a 0%, #15132b 50%, #1a1730 100%);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 30px rgba(201, 168, 76, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+/* Parchment texture on pages */
+.book-page-front::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Golden edge highlight on pages */
+.book-page-front::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--accent);
+  opacity: 0.2;
+  border-radius: 2px;
+}
+
+/* Decorative content on pages */
+.book-page-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 24px;
+  color: var(--accent);
+  animation: book-ornament-reveal 0.6s 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes book-ornament-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.book-page-symbol {
+  width: 80%;
+  height: 80%;
+}
+
+/* Book spine (center line) */
+.book-spine {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  bottom: -4px;
+  width: 6px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg,
+    var(--accent) 0%,
+    transparent 15%,
+    transparent 85%,
+    var(--accent) 100%
+  );
+  opacity: 0.4;
+  border-radius: 3px;
+  box-shadow: 0 0 20px var(--glow);
+  animation: book-spine-glow 0.8s 0.3s ease-out forwards;
+}
+
+@keyframes book-spine-glow {
+  0% {
+    opacity: 0.4;
+    box-shadow: 0 0 20px var(--glow);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 60px var(--glow), 0 0 100px var(--glow);
+  }
+  100% {
+    opacity: 0.2;
+    box-shadow: 0 0 80px var(--glow), 0 0 150px var(--glow);
+  }
+}
+
+/* Floating particles during transition */
+.book-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--highlight);
+  border-radius: 50%;
+  animation: book-particle-float 1s ease-out forwards;
+  opacity: 0;
+}
+
+.book-particle::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  background: var(--highlight);
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(3px);
+}
+
+@keyframes book-particle-float {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+  30% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(1.5);
+  }
+}
+
+.book-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ============ DETAIL PAGE ENTRANCE ============ */
+.detail-page-enter {
+  animation: detail-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes detail-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) rotateX(5deg);
+    filter: brightness(1.3);
+  }
+  40% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+  100% {
+    transform: scale(1) rotateX(0deg);
+    filter: brightness(1);
+  }
+}
+
+/* Card click pulse feedback */
+.buddy-card:active {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
+}
+
+/* Responsive book size */
+@media (max-width: 640px) {
+  .book-container {
+    width: 320px;
+    height: 230px;
+  }
+  .book-glow {
+    width: 250px;
+    height: 250px;
+  }
+}
