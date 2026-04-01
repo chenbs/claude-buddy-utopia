@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getBuddyById } from "@/lib/db";
 import {
@@ -12,6 +11,7 @@ import {
   MagicCircle,
 } from "@/components/MagicElements";
 import { DetailPageWrapper } from "@/components/DetailPageWrapper";
+import { BookBackLink } from "@/components/BookTransition";
 
 export const revalidate = 60;
 
@@ -48,13 +48,12 @@ export default async function BuddyDetailPage({ params }: PageProps) {
         <CrescentMoon className="absolute top-12 left-4 w-10 text-accent opacity-25" />
         <MagicCircle className="magic-circle-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] text-accent opacity-[0.04] pointer-events-none" />
 
-        <Link
-          href="/"
+        <BookBackLink
           className="relative z-10 inline-flex items-center gap-2 font-display text-xs tracking-[0.15em] uppercase text-muted hover:text-accent transition-colors duration-300 mb-12 group"
         >
           <span className="group-hover:-translate-x-1 transition-transform duration-300">&#x2190;</span>
           Return to Archive
-        </Link>
+        </BookBackLink>
 
         {/* Detail card — premium magic style */}
         <div className="relative z-10 max-w-4xl mx-auto">

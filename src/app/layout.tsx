@@ -3,6 +3,7 @@ import { Cinzel, Crimson_Text, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import { MagicDivider } from "@/components/MagicElements";
+import { BookTransitionProvider } from "@/components/BookTransition";
 
 const cinzel = Cinzel({
   variable: "--font-cinzel",
@@ -23,9 +24,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Buddy Utopia - Claude Buddy Showcase",
+  title: "Claude Buddy Utopia-AI宠物乌托邦",
   description:
-    "A gallery where everyone can upload and showcase their Claude Code buddies",
+    "Claude Buddy Utopia，向世界展示你的claude buddy",
+  keywords: "Claude Buddy AI",
 };
 
 export default function RootLayout({
@@ -59,7 +61,11 @@ export default function RootLayout({
         </nav>
 
         {/* Main Content */}
-        <main className="flex-1">{children}</main>
+        <main className="flex-1">
+          <BookTransitionProvider>
+            {children}
+          </BookTransitionProvider>
+        </main>
 
         {/* Footer */}
         <footer className="py-10 mt-16">

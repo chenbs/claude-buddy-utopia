@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useRef } from "react";
-import { BookTransitionProvider, BookCardLink } from "./BookTransition";
+import { BookCardLink } from "./BookTransition";
 
 interface Buddy {
   id: string;
@@ -68,10 +68,9 @@ function Card3D({
 /* ─── Gallery grid ─────────────────────────────────── */
 export function BuddyGallery({ buddies }: { buddies: Buddy[] }) {
   return (
-    <BookTransitionProvider>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-12">
-        {buddies.map((buddy, index) => (
-          <Card3D key={buddy.id} href={`/buddy/${buddy.id}`}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-12">
+      {buddies.map((buddy, index) => (
+        <Card3D key={buddy.id} href={`/buddy/${buddy.id}`}>
             {/* Golden border frame */}
             <div className="magic-card-border">
               <div className="magic-card-inner relative overflow-hidden">
@@ -131,6 +130,5 @@ export function BuddyGallery({ buddies }: { buddies: Buddy[] }) {
           </Card3D>
         ))}
       </div>
-    </BookTransitionProvider>
   );
 }
