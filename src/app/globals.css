@@ -148,8 +148,7 @@ body {
 
 /* ============ STAMP CARD ============ */
 .buddy-card {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
 }
 .buddy-card::before {
@@ -163,7 +162,6 @@ body {
   transition: opacity 0.4s ease, border-color 0.4s ease;
 }
 .buddy-card:hover {
-  transform: translateY(-6px);
   box-shadow:
     0 0 24px var(--glow),
     0 20px 40px rgba(0, 0, 0, 0.12);
@@ -302,6 +300,34 @@ body {
   background: linear-gradient(90deg, transparent, var(--card-border), transparent);
 }
 
+/* ============ 3D CARD TILT ============ */
+.card-3d {
+  --shine-x: 50%;
+  --shine-y: 50%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.card-3d-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--shine-x) var(--shine-y),
+    rgba(201, 168, 76, 0.12) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.card-3d:hover .card-3d-shine {
+  opacity: 1;
+}
+
 /* ============ MAGIC BOOK TRANSITION ============ */
 
 /* Full-screen overlay */
@@ -312,211 +338,214 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: book-overlay-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   pointer-events: all;
+  animation: book-overlay-in 0.5s ease-out forwards;
+}
+
+.book-overlay-closing {
+  animation: book-overlay-in 0.3s ease-out forwards;
 }
 
 @keyframes book-overlay-in {
-  0% {
-    background: transparent;
-  }
-  30% {
-    background: rgba(13, 12, 29, 0.6);
-  }
-  100% {
-    background: rgba(13, 12, 29, 0.95);
-  }
+  0%   { background: transparent; }
+  100% { background: rgba(13, 12, 29, 0.92); }
 }
 
-/* Magical glow behind the book */
+/* Magical glow */
 .book-glow {
   position: absolute;
-  width: 400px;
-  height: 400px;
+  width: 500px;
+  height: 500px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
-  animation: book-glow-pulse 1.2s ease-out forwards;
-  filter: blur(40px);
+  filter: blur(50px);
+  animation: book-glow-in 1.4s ease-out forwards;
 }
 
-@keyframes book-glow-pulse {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  40% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.5);
-    opacity: 0.6;
-  }
+.book-glow-closing {
+  animation: book-glow-out 0.8s ease-in forwards;
 }
 
-/* 3D book container */
-.book-container {
+@keyframes book-glow-in {
+  0%   { transform: scale(0); opacity: 0; }
+  40%  { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.2); opacity: 0.5; }
+}
+
+@keyframes book-glow-out {
+  0%   { transform: scale(1.2); opacity: 0.5; }
+  100% { transform: scale(0.3); opacity: 0; }
+}
+
+/* 3D scene container */
+.book-scene {
+  perspective: 1800px;
+  width: 520px;
+  height: 380px;
+  animation: book-scene-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes book-scene-enter {
+  0%   { transform: scale(0.4) translateY(40px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Book body — preserve-3d so cover can flip in 3D */
+.book-body {
   position: relative;
-  width: 500px;
-  height: 360px;
-  perspective: 1500px;
-  transform-style: preserve-3d;
-  animation: book-entrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-@keyframes book-entrance {
-  0% {
-    transform: scale(0.3) rotateX(30deg);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1) rotateX(0deg);
-    opacity: 1;
-  }
-}
-
-/* Each book page (half) */
-.book-page {
-  position: absolute;
-  top: 0;
-  width: 50%;
+  width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transform-origin: center center;
 }
 
-.book-page-left {
-  left: 0;
-  transform-origin: right center;
-  animation: book-page-open-left 0.8s 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  transform: rotateY(0deg);
+/* ── Back page (static, revealed when cover opens) ── */
+.book-back-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  background: linear-gradient(135deg, #1e1b3a 0%, #15132b 50%, #1a1730 100%);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 0 40px rgba(201, 168, 76, 0.04),
+    0 8px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  /* Initial state: slightly behind */
+  transform: translateZ(-1px);
 }
 
-.book-page-right {
-  right: 0;
+/* Inner page halves */
+.book-inner-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--accent);
+  position: relative;
+}
+
+.book-inner-left {
+  border-right: 1px solid rgba(201, 168, 76, 0.1);
+}
+
+.book-page-symbol {
+  width: 70%;
+  height: 70%;
+  opacity: 0;
+  animation: book-symbol-reveal 0.5s 0.6s ease-out forwards;
+}
+
+@keyframes book-symbol-reveal {
+  0%   { opacity: 0; transform: scale(0.7); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ── Cover (the flipping part) ── */
+.book-cover {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  /* Pivot on the LEFT edge */
   transform-origin: left center;
-  animation: book-page-open-right 0.8s 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  /* Start closed (rotateY 0), animate to open (-160deg) */
+  animation: book-cover-open 0.9s 0.25s cubic-bezier(0.32, 0.72, 0.35, 1.0) forwards;
   transform: rotateY(0deg);
 }
 
-@keyframes book-page-open-left {
-  0% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(60deg);
-  }
+.book-cover-closing {
+  /* Start open, animate back to closed */
+  animation: book-cover-close 0.7s 0.1s cubic-bezier(0.5, 0, 0.75, 0.5) forwards;
+  transform: rotateY(-160deg);
 }
 
-@keyframes book-page-open-right {
-  0% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(-60deg);
-  }
+@keyframes book-cover-open {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(-160deg); }
 }
 
-/* Page face */
-.book-page-inner {
+@keyframes book-cover-close {
+  0%   { transform: rotateY(-160deg); }
+  100% { transform: rotateY(0deg); }
+}
+
+/* Front of cover (visible when book is closed) */
+.book-cover-front {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-}
-
-.book-page-front {
-  background: linear-gradient(135deg, #1e1b3a 0%, #15132b 50%, #1a1730 100%);
+  background: linear-gradient(145deg, #1a1838 0%, #12102a 40%, #0e0c22 100%);
   border: 1px solid var(--accent);
-  border-radius: 3px;
+  border-radius: 4px;
   box-shadow:
-    inset 0 0 30px rgba(201, 168, 76, 0.05),
-    0 4px 20px rgba(0, 0, 0, 0.4);
+    inset 0 0 50px rgba(201, 168, 76, 0.06),
+    0 10px 40px rgba(0, 0, 0, 0.6);
   overflow: hidden;
 }
 
-/* Parchment texture on pages */
-.book-page-front::before {
+/* Parchment grain texture on cover */
+.book-cover-front::before {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.03;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Golden edge highlight on pages */
-.book-page-front::after {
-  content: "";
+/* Back of cover (visible when flipped open) */
+.book-cover-back {
   position: absolute;
-  inset: 8px;
-  border: 1px solid var(--accent);
-  opacity: 0.2;
-  border-radius: 2px;
+  inset: 0;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #1e1b3a 0%, #15132b 50%, #1a1730 100%);
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-/* Decorative content on pages */
-.book-page-ornament {
+/* Cover design content */
+.book-cover-design {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 24px;
+  padding: 16px;
   color: var(--accent);
-  animation: book-ornament-reveal 0.6s 0.5s ease-out forwards;
-  opacity: 0;
+}
+.book-cover-svg {
+  width: 75%;
+  height: 90%;
 }
 
-@keyframes book-ornament-reveal {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.book-page-symbol {
-  width: 80%;
-  height: 80%;
-}
-
-/* Book spine (center line) */
-.book-spine {
+/* Spine line */
+.book-spine-line {
   position: absolute;
-  left: 50%;
-  top: -4px;
-  bottom: -4px;
-  width: 6px;
-  transform: translateX(-50%);
-  background: linear-gradient(180deg,
-    var(--accent) 0%,
-    transparent 15%,
-    transparent 85%,
-    var(--accent) 100%
-  );
+  left: 0;
+  top: -2px;
+  bottom: -2px;
+  width: 4px;
+  background: var(--accent);
   opacity: 0.4;
-  border-radius: 3px;
-  box-shadow: 0 0 20px var(--glow);
-  animation: book-spine-glow 0.8s 0.3s ease-out forwards;
+  border-radius: 2px;
+  box-shadow: 0 0 16px var(--glow);
+  z-index: 5;
+  animation: book-spine-pulse 0.9s 0.25s ease-out forwards;
 }
 
-@keyframes book-spine-glow {
-  0% {
-    opacity: 0.4;
-    box-shadow: 0 0 20px var(--glow);
-  }
-  50% {
-    opacity: 0.8;
-    box-shadow: 0 0 60px var(--glow), 0 0 100px var(--glow);
-  }
-  100% {
-    opacity: 0.2;
-    box-shadow: 0 0 80px var(--glow), 0 0 150px var(--glow);
-  }
+@keyframes book-spine-pulse {
+  0%   { box-shadow: 0 0 16px var(--glow); opacity: 0.4; }
+  50%  { box-shadow: 0 0 50px var(--glow), 0 0 80px var(--glow); opacity: 0.9; }
+  100% { box-shadow: 0 0 30px var(--glow), 0 0 60px var(--glow); opacity: 0.5; }
 }
 
-/* Floating particles during transition */
+/* Particles */
+.book-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 .book-particle {
   position: absolute;
   width: 3px;
@@ -538,39 +567,25 @@ body {
 }
 
 @keyframes book-particle-float {
-  0% {
-    opacity: 0;
-    transform: translateY(0) scale(0);
-  }
-  30% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-80px) scale(1.5);
-  }
+  0%   { opacity: 0; transform: translateY(0) scale(0); }
+  25%  { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-100px) scale(1.3); }
 }
 
-.book-particles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-/* ============ DETAIL PAGE ENTRANCE ============ */
+/* ============ DETAIL PAGE ENTRANCE / EXIT ============ */
 .detail-page-enter {
-  animation: detail-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: detail-enter 0.7s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes detail-enter {
   0% {
     opacity: 0;
-    transform: scale(0.9) rotateX(5deg);
-    filter: brightness(1.3);
+    transform: scale(0.92) rotateX(4deg);
+    filter: brightness(1.4);
   }
-  40% {
+  50% {
     opacity: 1;
-    filter: brightness(1.1);
+    filter: brightness(1.15);
   }
   100% {
     transform: scale(1) rotateX(0deg);
@@ -578,20 +593,31 @@ body {
   }
 }
 
-/* Card click pulse feedback */
-.buddy-card:active {
-  transform: scale(0.96);
-  transition: transform 0.1s ease;
+.detail-page-exit {
+  animation: detail-exit 0.4s ease-in forwards;
 }
 
-/* Responsive book size */
+@keyframes detail-exit {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.92);
+    filter: brightness(1.3);
+  }
+}
+
+/* ============ RESPONSIVE BOOK ============ */
 @media (max-width: 640px) {
-  .book-container {
-    width: 320px;
-    height: 230px;
+  .book-scene {
+    width: 340px;
+    height: 250px;
   }
   .book-glow {
-    width: 250px;
-    height: 250px;
+    width: 300px;
+    height: 300px;
   }
 }
