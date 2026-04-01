@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { MagicCircle, PotionBottle, MagicWand, FloatingStars } from "@/components/MagicElements";
 
 export default function UploadPage() {
   const router = useRouter();
@@ -80,8 +81,17 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto px-6 sm:px-8 py-16 sm:py-24">
-      <div className="text-center mb-14">
+    <div className="relative max-w-lg mx-auto px-6 sm:px-8 py-16 sm:py-24 overflow-hidden">
+      {/* Floating sparkles */}
+      <FloatingStars />
+
+      {/* Decorative elements */}
+      <PotionBottle className="absolute top-12 right-4 w-8 h-14 text-accent opacity-20 rotate-12" variant={1} />
+      <PotionBottle className="absolute top-20 right-16 w-6 h-10 text-accent opacity-15 -rotate-6" variant={2} />
+      <MagicWand className="absolute top-16 left-2 w-14 text-accent opacity-15 -rotate-45" />
+
+      {/* Header */}
+      <div className="relative z-10 text-center mb-14">
         <p className="text-accent text-sm tracking-[0.3em] uppercase mb-4">
           &#x2726; New Entry &#x2726;
         </p>
@@ -94,62 +104,67 @@ export default function UploadPage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Drop Zone */}
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setIsDragging(true);
-          }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className={`
-            relative border border-dashed p-2 cursor-pointer transition-all duration-300
-            ${
-              isDragging
-                ? "border-accent bg-accent-light drop-zone-active"
-                : "border-card-border hover:border-accent/50"
-            }
-          `}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/gif,image/webp"
-            className="hidden"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) handleFile(f);
-            }}
-          />
+      <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
+        {/* Drop Zone with summoning circle */}
+        <div className="relative">
+          {/* Magic circle behind the drop zone */}
+          <MagicCircle className="summon-pulse absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] text-accent pointer-events-none" />
 
-          <div className="bg-card-inner">
-            {preview ? (
-              <div className="flex flex-col items-center gap-4 p-8">
-                <div className="relative w-48 h-48 overflow-hidden border border-card-border/20">
-                  <Image
-                    src={preview}
-                    alt="Preview"
-                    fill
-                    className="object-cover"
-                  />
+          <div
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className={`
+              relative z-10 border border-dashed p-2 cursor-pointer transition-all duration-300
+              ${
+                isDragging
+                  ? "border-accent bg-accent-light drop-zone-active"
+                  : "border-card-border hover:border-accent/50"
+              }
+            `}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/gif,image/webp"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) handleFile(f);
+              }}
+            />
+
+            <div className="bg-card-inner">
+              {preview ? (
+                <div className="flex flex-col items-center gap-4 p-8">
+                  <div className="relative w-48 h-48 overflow-hidden border border-card-border/20">
+                    <Image
+                      src={preview}
+                      alt="Preview"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <p className="text-card-text/50 text-xs italic">
+                    Click or drag to replace
+                  </p>
                 </div>
-                <p className="text-card-text/50 text-xs italic">
-                  Click or drag to replace
-                </p>
-              </div>
-            ) : (
-              <div className="py-14 text-center">
-                <p className="text-accent text-2xl mb-3">&#x2726;</p>
-                <p className="text-card-text text-sm font-display tracking-wider uppercase mb-2">
-                  Drop your buddy&apos;s portrait here
-                </p>
-                <p className="text-card-text/40 text-xs italic">
-                  PNG, JPEG, GIF, WebP &mdash; max 5 MB
-                </p>
-              </div>
-            )}
+              ) : (
+                <div className="py-14 text-center">
+                  <p className="text-accent text-2xl mb-3">&#x2726;</p>
+                  <p className="text-card-text text-sm font-display tracking-wider uppercase mb-2">
+                    Drop your buddy&apos;s portrait here
+                  </p>
+                  <p className="text-card-text/40 text-xs italic">
+                    PNG, JPEG, GIF, WebP &mdash; max 5 MB
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

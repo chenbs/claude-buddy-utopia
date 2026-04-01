@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cinzel, Crimson_Text, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import { MagicDivider } from "@/components/MagicElements";
 
 const cinzel = Cinzel({
   variable: "--font-cinzel",
@@ -63,9 +64,7 @@ export default function RootLayout({
         {/* Footer */}
         <footer className="py-10 mt-16">
           <div className="max-w-6xl mx-auto px-6 text-center">
-            <div className="divider-diamond mb-8">
-              <span className="text-accent text-sm">&#x2726;</span>
-            </div>
+            <MagicDivider className="mb-8" />
             <p className="font-display text-xs tracking-[0.25em] uppercase text-muted">
               Buddy Utopia &mdash; A Magical Home for Every Companion
             </p>

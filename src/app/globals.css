@@ -57,42 +57,96 @@ body {
   font-family: var(--font-body), Georgia, serif;
 }
 
-/* Subtle star-like dots on dark mode */
+/* ============ ANIMATED STAR BACKGROUND ============ */
 @media (prefers-color-scheme: dark) {
-  body::before {
+  body::after {
     content: "";
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
     background-image:
-      radial-gradient(1px 1px at 10% 20%, rgba(201, 168, 76, 0.15) 50%, transparent 50%),
-      radial-gradient(1px 1px at 30% 65%, rgba(201, 168, 76, 0.1) 50%, transparent 50%),
-      radial-gradient(1px 1px at 55% 15%, rgba(201, 168, 76, 0.12) 50%, transparent 50%),
-      radial-gradient(1px 1px at 70% 80%, rgba(201, 168, 76, 0.08) 50%, transparent 50%),
-      radial-gradient(1px 1px at 85% 35%, rgba(201, 168, 76, 0.1) 50%, transparent 50%),
-      radial-gradient(1px 1px at 45% 90%, rgba(201, 168, 76, 0.12) 50%, transparent 50%),
-      radial-gradient(1px 1px at 20% 50%, rgba(201, 168, 76, 0.08) 50%, transparent 50%),
-      radial-gradient(1px 1px at 90% 60%, rgba(201, 168, 76, 0.1) 50%, transparent 50%),
-      radial-gradient(1.5px 1.5px at 15% 85%, rgba(201, 168, 76, 0.18) 50%, transparent 50%),
-      radial-gradient(1.5px 1.5px at 75% 45%, rgba(201, 168, 76, 0.15) 50%, transparent 50%);
+      radial-gradient(1px 1px at 5% 15%, rgba(201, 168, 76, 0.2) 50%, transparent 50%),
+      radial-gradient(1.2px 1.2px at 12% 68%, rgba(201, 168, 76, 0.12) 50%, transparent 50%),
+      radial-gradient(1px 1px at 22% 35%, rgba(201, 168, 76, 0.15) 50%, transparent 50%),
+      radial-gradient(0.8px 0.8px at 30% 82%, rgba(201, 168, 76, 0.1) 50%, transparent 50%),
+      radial-gradient(1.5px 1.5px at 38% 12%, rgba(201, 168, 76, 0.18) 50%, transparent 50%),
+      radial-gradient(1px 1px at 45% 55%, rgba(201, 168, 76, 0.1) 50%, transparent 50%),
+      radial-gradient(1.3px 1.3px at 52% 90%, rgba(201, 168, 76, 0.14) 50%, transparent 50%),
+      radial-gradient(0.8px 0.8px at 60% 28%, rgba(201, 168, 76, 0.12) 50%, transparent 50%),
+      radial-gradient(1px 1px at 68% 72%, rgba(201, 168, 76, 0.1) 50%, transparent 50%),
+      radial-gradient(1.5px 1.5px at 75% 8%, rgba(201, 168, 76, 0.16) 50%, transparent 50%),
+      radial-gradient(1px 1px at 82% 48%, rgba(201, 168, 76, 0.12) 50%, transparent 50%),
+      radial-gradient(1.2px 1.2px at 88% 65%, rgba(201, 168, 76, 0.14) 50%, transparent 50%),
+      radial-gradient(0.8px 0.8px at 92% 22%, rgba(201, 168, 76, 0.1) 50%, transparent 50%),
+      radial-gradient(1px 1px at 97% 85%, rgba(201, 168, 76, 0.12) 50%, transparent 50%),
+      radial-gradient(1.8px 1.8px at 15% 45%, rgba(201, 168, 76, 0.22) 50%, transparent 50%),
+      radial-gradient(1.6px 1.6px at 85% 40%, rgba(201, 168, 76, 0.18) 50%, transparent 50%);
+    animation: twinkle 8s ease-in-out infinite alternate;
   }
 }
 
-/* Parchment grain on light mode */
+@keyframes twinkle {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.75; }
+}
+
+/* Parchment grain for light mode */
 @media (prefers-color-scheme: light) {
-  body::before {
+  body::after {
     content: "";
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }
 
-/* Stamp-card: dashed outer, solid inner */
+/* ============ FLOATING SPARKLE PARTICLES ============ */
+.sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--highlight);
+  border-radius: 50%;
+  animation: float-sparkle 6s ease-in-out infinite;
+}
+.sparkle::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: var(--highlight);
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(2px);
+}
+
+.sparkle-1 { left: 8%; top: 20%; animation-delay: 0s; animation-duration: 7s; }
+.sparkle-2 { left: 25%; top: 60%; animation-delay: 1.2s; animation-duration: 5.5s; width: 2px; height: 2px; }
+.sparkle-3 { left: 45%; top: 15%; animation-delay: 2.5s; animation-duration: 8s; }
+.sparkle-4 { left: 65%; top: 70%; animation-delay: 0.8s; animation-duration: 6s; width: 2px; height: 2px; }
+.sparkle-5 { left: 80%; top: 30%; animation-delay: 3.2s; animation-duration: 7.5s; }
+.sparkle-6 { left: 15%; top: 80%; animation-delay: 4s; animation-duration: 6.5s; width: 2px; height: 2px; }
+.sparkle-7 { left: 90%; top: 55%; animation-delay: 1.8s; animation-duration: 5s; }
+.sparkle-8 { left: 55%; top: 85%; animation-delay: 2.8s; animation-duration: 7s; width: 2px; height: 2px; }
+
+@keyframes float-sparkle {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  10% { opacity: 0.6; }
+  50% {
+    transform: translateY(-30px) scale(1.3);
+    opacity: 0.8;
+  }
+  90% { opacity: 0.4; }
+}
+
+/* ============ STAMP CARD ============ */
 .buddy-card {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -105,21 +159,21 @@ body {
   border: 1px solid var(--card-border);
   pointer-events: none;
   z-index: 10;
-  opacity: 0.5;
+  opacity: 0.4;
   transition: opacity 0.4s ease, border-color 0.4s ease;
 }
 .buddy-card:hover {
   transform: translateY(-6px);
   box-shadow:
-    0 0 20px var(--glow),
-    0 20px 40px rgba(0, 0, 0, 0.15);
+    0 0 24px var(--glow),
+    0 20px 40px rgba(0, 0, 0, 0.12);
 }
 .buddy-card:hover::before {
-  opacity: 1;
+  opacity: 0.8;
   border-color: var(--highlight);
 }
 
-/* Image hover */
+/* ============ IMAGE HOVER ============ */
 .img-reveal {
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
               filter 0.5s ease;
@@ -129,7 +183,7 @@ body {
   filter: brightness(1.1);
 }
 
-/* Drop zone */
+/* ============ DROP ZONE ============ */
 .drop-zone-active {
   animation: magic-pulse 2s ease-in-out infinite;
 }
@@ -141,45 +195,31 @@ body {
   }
   50% {
     border-color: var(--highlight);
-    box-shadow: 0 0 24px var(--glow);
+    box-shadow: 0 0 30px var(--glow);
   }
 }
 
-/* Input focus — golden underline */
+/* ============ INPUT FOCUS ============ */
 .input-field {
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .input-field:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 2px 8px var(--glow);
+  box-shadow: 0 2px 12px var(--glow);
 }
 
-/* Button — magical glow */
+/* ============ BUTTON ============ */
 .btn-magic {
   position: relative;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
 }
 .btn-magic:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 0 20px var(--glow), 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 24px var(--glow), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Section divider with diamond */
-.divider-diamond {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.divider-diamond::before,
-.divider-diamond::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--card-border), transparent);
-}
-
-/* Ornamental corner for detail page */
+/* ============ ORNATE CORNERS ============ */
 .ornate-frame {
   position: relative;
 }
@@ -187,10 +227,11 @@ body {
 .ornate-frame::after {
   content: "";
   position: absolute;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-color: var(--accent);
-  opacity: 0.5;
+  opacity: 0.45;
+  z-index: 10;
 }
 .ornate-frame::before {
   top: -1px;
@@ -203,4 +244,60 @@ body {
   right: -1px;
   border-bottom: 2px solid;
   border-right: 2px solid;
+}
+
+/* Extra corners via child pseudo-elements */
+.ornate-corners::before,
+.ornate-corners::after {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: var(--accent);
+  opacity: 0.45;
+  z-index: 10;
+}
+.ornate-corners::before {
+  top: -1px;
+  right: -1px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+.ornate-corners::after {
+  bottom: -1px;
+  left: -1px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+
+/* ============ MAGIC CIRCLE SPIN ============ */
+.magic-circle-spin {
+  animation: slow-rotate 60s linear infinite;
+}
+@keyframes slow-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============ SUMMONING CIRCLE PULSE ============ */
+.summon-pulse {
+  animation: summon-glow 3s ease-in-out infinite;
+}
+@keyframes summon-glow {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.3; }
+}
+
+/* ============ DIVIDER ============ */
+.divider-diamond {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.divider-diamond::before,
+.divider-diamond::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--card-border), transparent);
 }
