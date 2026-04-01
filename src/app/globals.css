@@ -412,7 +412,7 @@ body {
   border-radius: inherit;
   background: radial-gradient(
     circle at var(--shine-x) var(--shine-y),
-    rgba(255, 240, 200, 0.15) 0%,
+    rgba(255, 240, 200, 0.12) 0%,
     transparent 55%
   );
   opacity: 0;
@@ -718,9 +718,9 @@ body {
   z-index: 10;
   background: radial-gradient(
     ellipse at center,
-    rgba(255, 235, 170, 0.95) 0%,
-    rgba(201, 168, 76, 0.6) 30%,
-    rgba(201, 168, 76, 0.2) 60%,
+    rgba(255, 235, 170, 0.76) 0%,
+    rgba(201, 168, 76, 0.48) 30%,
+    rgba(201, 168, 76, 0.16) 60%,
     transparent 100%
   );
   animation: golden-flash 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -728,14 +728,14 @@ body {
 
 .book-golden-flash-hold {
   animation: none;
-  background: rgba(255, 245, 220, 1);
+  background: rgba(255, 245, 220, 0.8);
   opacity: 1;
 }
 
 @keyframes golden-flash {
   0% { opacity: 0; transform: scale(0.3); }
-  50% { opacity: 1; transform: scale(1); }
-  100% { opacity: 1; transform: scale(3); background: rgba(255, 245, 220, 1); }
+  50% { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 0.8; transform: scale(3); background: rgba(255, 245, 220, 0.8); }
 }
 
 /* ─── Golden fadeout (overlay fades to reveal new page) ─── */
@@ -743,7 +743,7 @@ body {
   position: absolute;
   inset: 0;
   z-index: 10;
-  background: rgba(255, 245, 220, 1);
+  background: rgba(255, 245, 220, 0.8);
   animation: golden-fadeout 0.5s ease-out forwards;
 }
 
@@ -766,7 +766,7 @@ body {
   position: absolute;
   inset: 0;
   z-index: 10;
-  background: rgba(255, 245, 220, 0.7);
+  background: rgba(255, 245, 220, 0.56);
   animation: golden-unflash 0.3s ease-out forwards;
 }
 
