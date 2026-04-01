@@ -1,13 +1,34 @@
 @import "tailwindcss";
 
+/* =========================================================
+   Windows 2000 Theme
+   ========================================================= */
+
 :root {
-  --background: #fefcf3;
-  --foreground: #3d2c1e;
-  --accent: #d4956a;
-  --accent-light: #f5e6d3;
-  --card-bg: #ffffff;
-  --card-border: #e8d5c4;
-  --muted: #8b7355;
+  /* Win2K System Colors */
+  --win2k-desktop:        #008080;   /* classic teal desktop */
+  --win2k-silver:         #d4d0c8;   /* button face */
+  --win2k-silver-light:   #ffffff;   /* highlight */
+  --win2k-silver-mid:     #808080;   /* shadow */
+  --win2k-silver-dark:    #404040;   /* dark shadow */
+  --win2k-titlebar-start: #000080;   /* navy title */
+  --win2k-titlebar-end:   #1084d0;   /* blue gradient end */
+  --win2k-titlebar-text:  #ffffff;
+  --win2k-menu-bg:        #d4d0c8;
+  --win2k-text:           #000000;
+  --win2k-input-bg:       #ffffff;
+  --win2k-selected:       #0a246a;
+  --win2k-selected-text:  #ffffff;
+  --win2k-error-bg:       #ffffe1;
+
+  /* Keep original tokens for non-upload pages */
+  --background: #d4d0c8;
+  --foreground: #000000;
+  --accent: #000080;
+  --accent-light: #1084d0;
+  --card-bg: #d4d0c8;
+  --card-border: #808080;
+  --muted: #404040;
 }
 
 @theme inline {
@@ -18,43 +39,395 @@
   --color-card-bg: var(--card-bg);
   --color-card-border: var(--card-border);
   --color-muted: var(--muted);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-vt323), 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  --font-mono: 'Courier New', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1a1410;
-    --foreground: #f0e6d6;
-    --accent: #d4956a;
-    --accent-light: #2d2218;
-    --card-bg: #231c14;
-    --card-border: #3d3228;
-    --muted: #a89070;
-  }
-}
-
+/* ---- Global Reset ---- */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--win2k-desktop);
+  color: var(--win2k-text);
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
 }
 
-/* Smooth hover transitions for cards */
+/* ---- Desktop Background ---- */
+.win2k-desktop-bg {
+  background-color: var(--win2k-desktop);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+}
+
+/* ---- Taskbar ---- */
+.win2k-taskbar {
+  background: var(--win2k-silver);
+  border-bottom: 2px solid var(--win2k-silver-mid);
+  box-shadow: inset 0 -1px 0 var(--win2k-silver-dark);
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.win2k-start-btn {
+  background: var(--win2k-silver);
+  border-top: 2px solid var(--win2k-silver-light);
+  border-left: 2px solid var(--win2k-silver-light);
+  border-bottom: 2px solid var(--win2k-silver-dark);
+  border-right: 2px solid var(--win2k-silver-dark);
+  padding: 1px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--win2k-text);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.win2k-start-btn:hover {
+  filter: brightness(1.05);
+}
+.win2k-start-btn:active {
+  border-top: 2px solid var(--win2k-silver-dark);
+  border-left: 2px solid var(--win2k-silver-dark);
+  border-bottom: 2px solid var(--win2k-silver-light);
+  border-right: 2px solid var(--win2k-silver-light);
+}
+
+.win2k-taskbar-btn {
+  background: var(--win2k-silver);
+  border-top: 2px solid var(--win2k-silver-light);
+  border-left: 2px solid var(--win2k-silver-light);
+  border-bottom: 2px solid var(--win2k-silver-dark);
+  border-right: 2px solid var(--win2k-silver-dark);
+  padding: 1px 8px;
+  font-size: 11px;
+  color: var(--win2k-text);
+  cursor: pointer;
+  text-decoration: none;
+}
+.win2k-taskbar-btn:active {
+  border-top: 2px solid var(--win2k-silver-dark);
+  border-left: 2px solid var(--win2k-silver-dark);
+  border-bottom: 2px solid var(--win2k-silver-light);
+  border-right: 2px solid var(--win2k-silver-light);
+}
+
+/* ---- Window ---- */
+.win2k-window {
+  background: var(--win2k-silver);
+  border-top: 2px solid var(--win2k-silver-light);
+  border-left: 2px solid var(--win2k-silver-light);
+  border-bottom: 2px solid var(--win2k-silver-dark);
+  border-right: 2px solid var(--win2k-silver-dark);
+  box-shadow: 2px 2px 0 var(--win2k-silver-dark);
+}
+
+/* ---- Title Bar ---- */
+.win2k-titlebar {
+  background: linear-gradient(
+    to right,
+    var(--win2k-titlebar-start),
+    var(--win2k-titlebar-end)
+  );
+  color: var(--win2k-titlebar-text);
+  font-weight: bold;
+  font-size: 12px;
+  padding: 3px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.win2k-caption-btn {
+  background: var(--win2k-silver);
+  color: var(--win2k-text);
+  border-top: 1px solid var(--win2k-silver-light);
+  border-left: 1px solid var(--win2k-silver-light);
+  border-bottom: 1px solid var(--win2k-silver-dark);
+  border-right: 1px solid var(--win2k-silver-dark);
+  width: 16px;
+  height: 14px;
+  font-size: 9px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.win2k-caption-btn:hover { background: #e0dcda; }
+.win2k-caption-btn:active {
+  border-top: 1px solid var(--win2k-silver-dark);
+  border-left: 1px solid var(--win2k-silver-dark);
+  border-bottom: 1px solid var(--win2k-silver-light);
+  border-right: 1px solid var(--win2k-silver-light);
+}
+.win2k-close-btn:hover { background: #cc0000; color: white; }
+
+/* ---- Menu Bar ---- */
+.win2k-menubar {
+  background: var(--win2k-silver);
+  border-bottom: 1px solid var(--win2k-silver-mid);
+  display: flex;
+  align-items: center;
+  padding: 1px 2px;
+}
+.win2k-menu-item {
+  padding: 1px 6px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--win2k-text);
+  background: transparent;
+  border: 1px solid transparent;
+}
+.win2k-menu-item:hover {
+  background: var(--win2k-selected);
+  color: var(--win2k-selected-text);
+}
+
+/* ---- Toolbar ---- */
+.win2k-toolbar {
+  background: var(--win2k-silver);
+  border-bottom: 1px solid var(--win2k-silver-mid);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 4px;
+}
+.win2k-toolbar-btn {
+  background: var(--win2k-silver);
+  border: 1px solid transparent;
+  padding: 2px 6px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--win2k-text);
+}
+.win2k-toolbar-btn:hover {
+  border-top: 1px solid var(--win2k-silver-light);
+  border-left: 1px solid var(--win2k-silver-light);
+  border-bottom: 1px solid var(--win2k-silver-dark);
+  border-right: 1px solid var(--win2k-silver-dark);
+}
+.win2k-toolbar-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--win2k-silver-mid);
+  margin: 0 2px;
+}
+.win2k-address-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  font-size: 11px;
+}
+.win2k-address-label {
+  white-space: nowrap;
+  font-size: 11px;
+}
+.win2k-address-input {
+  flex: 1;
+  background: var(--win2k-input-bg);
+  border-top: 1px solid var(--win2k-silver-dark);
+  border-left: 1px solid var(--win2k-silver-dark);
+  border-bottom: 1px solid var(--win2k-silver-light);
+  border-right: 1px solid var(--win2k-silver-light);
+  padding: 1px 4px;
+  font-size: 11px;
+  font-family: 'Tahoma', sans-serif;
+}
+
+/* ---- Window Body ---- */
+.win2k-body {
+  background: var(--win2k-silver);
+  font-size: 11px;
+}
+.win2k-info-text {
+  font-size: 11px;
+  color: var(--win2k-text);
+}
+
+/* ---- Fieldset / GroupBox ---- */
+.win2k-fieldset {
+  border: 2px solid;
+  border-color: var(--win2k-silver-mid) var(--win2k-silver-light) var(--win2k-silver-light) var(--win2k-silver-mid);
+  padding: 8px;
+  background: var(--win2k-silver);
+}
+.win2k-legend {
+  font-size: 11px;
+  font-weight: bold;
+  padding: 0 4px;
+  color: var(--win2k-text);
+}
+
+/* ---- Drop Zone ---- */
+.win2k-dropzone {
+  background: var(--win2k-input-bg);
+  border-top: 2px solid var(--win2k-silver-dark);
+  border-left: 2px solid var(--win2k-silver-dark);
+  border-bottom: 2px solid var(--win2k-silver-light);
+  border-right: 2px solid var(--win2k-silver-light);
+  cursor: pointer;
+  text-align: center;
+  padding: 12px;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.win2k-dropzone-active {
+  background: #e8f0ff;
+  outline: 2px dashed var(--win2k-selected);
+}
+.win2k-img-preview {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-top: 2px solid var(--win2k-silver-dark);
+  border-left: 2px solid var(--win2k-silver-dark);
+  border-bottom: 2px solid var(--win2k-silver-light);
+  border-right: 2px solid var(--win2k-silver-light);
+  overflow: hidden;
+}
+.win2k-folder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.win2k-drop-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--win2k-text);
+}
+.win2k-small-text {
+  font-size: 10px;
+  color: #444;
+}
+
+/* ---- Form Labels & Inputs ---- */
+.win2k-label {
+  font-size: 11px;
+  color: var(--win2k-text);
+  text-align: right;
+}
+.win2k-input {
+  background: var(--win2k-input-bg);
+  border-top: 2px solid var(--win2k-silver-dark);
+  border-left: 2px solid var(--win2k-silver-dark);
+  border-bottom: 2px solid var(--win2k-silver-light);
+  border-right: 2px solid var(--win2k-silver-light);
+  padding: 2px 4px;
+  font-size: 11px;
+  font-family: 'Tahoma', sans-serif;
+  color: var(--win2k-text);
+  outline: none;
+}
+.win2k-input:focus {
+  outline: 1px dotted var(--win2k-text);
+  outline-offset: -2px;
+}
+.win2k-textarea {
+  resize: vertical;
+}
+
+/* ---- Error Box ---- */
+.win2k-error-box {
+  background: var(--win2k-error-bg);
+  border: 1px solid #a0a000;
+  padding: 6px 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11px;
+}
+.win2k-error-icon {
+  color: #cc8800;
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ---- Buttons ---- */
+.win2k-btn {
+  background: var(--win2k-silver);
+  border-top: 2px solid var(--win2k-silver-light);
+  border-left: 2px solid var(--win2k-silver-light);
+  border-bottom: 2px solid var(--win2k-silver-dark);
+  border-right: 2px solid var(--win2k-silver-dark);
+  padding: 3px 14px;
+  font-size: 11px;
+  font-family: 'Tahoma', sans-serif;
+  color: var(--win2k-text);
+  cursor: pointer;
+  min-width: 75px;
+}
+.win2k-btn:hover { background: #e0dcda; }
+.win2k-btn:active {
+  border-top: 2px solid var(--win2k-silver-dark);
+  border-left: 2px solid var(--win2k-silver-dark);
+  border-bottom: 2px solid var(--win2k-silver-light);
+  border-right: 2px solid var(--win2k-silver-light);
+}
+.win2k-btn:disabled {
+  color: var(--win2k-silver-mid);
+  text-shadow: 1px 1px 0 var(--win2k-silver-light);
+  cursor: default;
+}
+.win2k-btn-default {
+  outline: 1px solid var(--win2k-text);
+  outline-offset: -4px;
+}
+
+/* ---- Status Bar ---- */
+.win2k-statusbar {
+  background: var(--win2k-silver);
+  border-top: 1px solid var(--win2k-silver-mid);
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+.win2k-statusbar span:first-child {
+  border-top: 1px solid var(--win2k-silver-mid);
+  border-left: 1px solid var(--win2k-silver-mid);
+  border-bottom: 1px solid var(--win2k-silver-light);
+  border-right: 1px solid var(--win2k-silver-light);
+  padding: 1px 6px;
+}
+.win2k-statusbar-sep {
+  display: inline-block;
+  width: 1px;
+  height: 16px;
+  background: var(--win2k-silver-mid);
+}
+
+/* ---- Desktop (win2k-desktop used in page) ---- */
+.win2k-desktop {
+  background-color: var(--win2k-desktop);
+}
+
+/* ---- Buddy card (keep for home page) ---- */
 .buddy-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: none;
+  border-top: 2px solid var(--win2k-silver-light);
+  border-left: 2px solid var(--win2k-silver-light);
+  border-bottom: 2px solid var(--win2k-silver-dark);
+  border-right: 2px solid var(--win2k-silver-dark);
 }
 .buddy-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  transform: none;
+  box-shadow: none;
+  background: #e8e4dc;
 }
 
-/* Drop zone animation */
+/* Drop zone pulse (kept for compatibility) */
 .drop-zone-active {
-  animation: pulse-border 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-border {
-  0%, 100% { border-color: var(--accent); }
-  50% { border-color: var(--accent-light); }
+  animation: none;
 }
