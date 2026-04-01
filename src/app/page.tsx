@@ -20,11 +20,15 @@ export default async function HomePage() {
   return (
     <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
       {/* Hero */}
-      <div className="py-24 sm:py-32 text-center">
-        <h1 className="font-display text-5xl sm:text-7xl font-light tracking-tight mb-6">
+      <div className="py-20 sm:py-28 text-center">
+        <p className="text-accent text-sm tracking-[0.3em] uppercase mb-6">
+          &#x2726; The Enchanted Collection &#x2726;
+        </p>
+        <h1 className="font-display text-4xl sm:text-6xl tracking-[0.05em] uppercase font-medium mb-6">
           Buddy Utopia
         </h1>
-        <p className="text-muted text-sm sm:text-base tracking-wide max-w-md mx-auto leading-relaxed">
+        <div className="w-24 h-px bg-accent/40 mx-auto mb-6" />
+        <p className="text-muted text-base sm:text-lg italic max-w-md mx-auto leading-relaxed">
           A cozy gallery for Claude Code buddies.
           <br />
           Upload yours and let the world see your companion!
@@ -33,24 +37,26 @@ export default async function HomePage() {
 
       {/* Error State */}
       {error && (
-        <div className="border border-card-border px-6 py-4 mb-12 text-center">
-          <p className="text-muted text-sm">{error}</p>
+        <div className="border border-accent/30 bg-accent-light px-6 py-4 mb-10 text-center">
+          <p className="text-accent text-sm italic">{error}</p>
         </div>
       )}
 
       {/* Empty State */}
       {!error && buddies.length === 0 && (
-        <div className="text-center py-24">
-          <p className="text-5xl mb-8">🦫</p>
-          <h2 className="font-display text-2xl font-light mb-3">No buddies yet</h2>
-          <p className="text-muted text-sm mb-10">
-            Be the first one to share your Claude buddy.
+        <div className="text-center py-20">
+          <p className="text-6xl mb-6">🦫</p>
+          <h2 className="font-display text-xl tracking-[0.1em] uppercase mb-3">
+            The Archive Awaits
+          </h2>
+          <p className="text-muted italic mb-10">
+            Be the first wizard to register a companion.
           </p>
           <Link
             href="/upload"
-            className="btn-primary inline-block text-xs tracking-[0.15em] uppercase font-medium border border-foreground px-8 py-3 hover:bg-foreground hover:text-background transition-colors duration-300"
+            className="btn-magic inline-block font-display text-xs tracking-[0.15em] uppercase border border-accent/60 text-accent px-8 py-3 hover:bg-accent hover:text-background transition-colors duration-300"
           >
-            Upload the first buddy
+            Summon the First Buddy
           </Link>
         </div>
       )}
@@ -58,37 +64,48 @@ export default async function HomePage() {
       {/* Gallery Grid */}
       {buddies.length > 0 && (
         <>
-          <div className="flex items-center gap-6 mb-10">
-            <div className="flex-1 h-px bg-card-border" />
-            <span className="text-xs tracking-[0.2em] uppercase text-muted">
-              {buddies.length} {buddies.length === 1 ? "buddy" : "buddies"}
+          <div className="divider-diamond mb-10">
+            <span className="font-display text-xs tracking-[0.25em] uppercase text-muted px-2">
+              {buddies.length} {buddies.length === 1 ? "Companion" : "Companions"} Registered
             </span>
-            <div className="flex-1 h-px bg-card-border" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-12">
-            {buddies.map((buddy) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 pb-12">
+            {buddies.map((buddy, index) => (
               <Link
                 key={buddy.id}
                 href={`/buddy/${buddy.id}`}
-                className="buddy-card group block bg-card-bg border border-card-border overflow-hidden"
+                className="buddy-card group block bg-card-bg border border-dashed border-card-border p-2 overflow-hidden"
               >
-                <div className="aspect-square relative bg-surface overflow-hidden">
-                  <Image
-                    src={buddy.image_url}
-                    alt={buddy.name}
-                    fill
-                    className="object-cover img-reveal"
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  />
-                </div>
-                <div className="px-4 py-4">
-                  <h3 className="text-sm font-medium truncate">
-                    {buddy.name}
-                  </h3>
-                  <p className="text-muted text-xs mt-1">
-                    {buddy.author}
-                  </p>
+                {/* Inner card — dark like the screenshot */}
+                <div className="bg-card-inner overflow-hidden">
+                  {/* Index number */}
+                  <div className="px-3 pt-2 pb-1 flex justify-between items-center">
+                    <span className="font-mono text-[10px] text-card-text/40">
+                      ({String(index + 1).padStart(2, "0")})
+                    </span>
+                  </div>
+
+                  {/* Image */}
+                  <div className="aspect-square relative mx-3 mb-2 overflow-hidden border border-card-border/20">
+                    <Image
+                      src={buddy.image_url}
+                      alt={buddy.name}
+                      fill
+                      className="object-cover img-reveal"
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    />
+                  </div>
+
+                  {/* Info */}
+                  <div className="px-3 pb-3">
+                    <h3 className="font-display text-sm tracking-wider uppercase text-card-text truncate group-hover:text-highlight transition-colors duration-300">
+                      {buddy.name}
+                    </h3>
+                    <p className="text-card-text/50 text-xs italic mt-0.5">
+                      by {buddy.author}
+                    </p>
+                  </div>
                 </div>
               </Link>
             ))}

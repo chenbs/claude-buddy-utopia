@@ -30,48 +30,59 @@ export default async function BuddyDetailPage({ params }: PageProps) {
   });
 
   return (
-    <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-16 sm:py-24">
+    <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-12 sm:py-20">
       <Link
         href="/"
-        className="inline-block text-xs tracking-[0.1em] uppercase text-muted hover:text-foreground transition-colors duration-300 mb-12"
+        className="inline-flex items-center gap-2 font-display text-xs tracking-[0.15em] uppercase text-muted hover:text-accent transition-colors duration-300 mb-12"
       >
-        Back
+        <span>&#x2190;</span> Return to Archive
       </Link>
 
-      <div className="md:flex md:gap-16">
-        {/* Image */}
-        <div className="md:w-1/2 mb-10 md:mb-0">
-          <div className="aspect-square relative bg-surface overflow-hidden">
-            <Image
-              src={buddy.image_url}
-              alt={buddy.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority
-            />
-          </div>
-        </div>
+      {/* Card — stamp style wrapper */}
+      <div className="bg-card-bg border border-dashed border-card-border p-3 sm:p-4 max-w-4xl mx-auto">
+        <div className="ornate-frame bg-card-inner overflow-hidden">
+          <div className="md:flex">
+            {/* Image */}
+            <div className="md:w-1/2">
+              <div className="aspect-square relative overflow-hidden">
+                <Image
+                  src={buddy.image_url}
+                  alt={buddy.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
+              </div>
+            </div>
 
-        {/* Info */}
-        <div className="md:w-1/2 flex flex-col justify-center">
-          <h1 className="font-display text-4xl sm:text-5xl font-light tracking-tight mb-3">
-            {buddy.name}
-          </h1>
-          <p className="text-xs tracking-[0.1em] uppercase text-muted mb-8">
-            {buddy.author}
-          </p>
+            {/* Info */}
+            <div className="md:w-1/2 p-6 sm:p-10 flex flex-col justify-center text-card-text">
+              <p className="text-highlight text-xs tracking-[0.3em] uppercase mb-4">
+                &#x2726; Companion Record &#x2726;
+              </p>
+              <h1 className="font-display text-2xl sm:text-3xl tracking-[0.05em] uppercase font-medium text-card-text mb-2">
+                {buddy.name}
+              </h1>
+              <p className="text-card-text/50 text-xs italic mb-6">
+                Summoned by {buddy.author}
+              </p>
 
-          {buddy.description && (
-            <p className="text-foreground/70 text-sm leading-relaxed mb-10 whitespace-pre-wrap">
-              {buddy.description}
-            </p>
-          )}
+              {buddy.description && (
+                <>
+                  <div className="w-12 h-px bg-highlight/30 mb-4" />
+                  <p className="text-card-text/70 italic text-sm leading-relaxed mb-6 whitespace-pre-wrap">
+                    &ldquo;{buddy.description}&rdquo;
+                  </p>
+                </>
+              )}
 
-          <div className="mt-auto pt-6 border-t border-card-border">
-            <p className="text-muted text-xs tracking-wide">
-              {createdDate}
-            </p>
+              <div className="mt-auto pt-5 border-t border-card-border/30">
+                <p className="text-card-text/30 text-xs tracking-wider uppercase">
+                  Registered &mdash; {createdDate}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

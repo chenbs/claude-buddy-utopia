@@ -80,15 +80,21 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto px-6 sm:px-8 py-20 sm:py-28">
-      <h1 className="font-display text-4xl font-light tracking-tight text-center mb-3">
-        Upload
-      </h1>
-      <p className="text-muted text-sm text-center mb-16">
-        Share your Claude Code companion with the community.
-      </p>
+    <div className="max-w-lg mx-auto px-6 sm:px-8 py-16 sm:py-24">
+      <div className="text-center mb-14">
+        <p className="text-accent text-sm tracking-[0.3em] uppercase mb-4">
+          &#x2726; New Entry &#x2726;
+        </p>
+        <h1 className="font-display text-3xl sm:text-4xl tracking-[0.05em] uppercase font-medium mb-3">
+          Summon Your Buddy
+        </h1>
+        <div className="w-16 h-px bg-accent/40 mx-auto mb-4" />
+        <p className="text-muted italic">
+          Register a new companion to the enchanted archive.
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-10">
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Drop Zone */}
         <div
           onDragOver={(e) => {
@@ -99,11 +105,11 @@ export default function UploadPage() {
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
           className={`
-            border border-dashed p-12 text-center cursor-pointer transition-all duration-300
+            relative border border-dashed p-2 cursor-pointer transition-all duration-300
             ${
               isDragging
-                ? "border-highlight bg-accent-light drop-zone-active"
-                : "border-card-border hover:border-muted"
+                ? "border-accent bg-accent-light drop-zone-active"
+                : "border-card-border hover:border-accent/50"
             }
           `}
         >
@@ -118,36 +124,39 @@ export default function UploadPage() {
             }}
           />
 
-          {preview ? (
-            <div className="flex flex-col items-center gap-6">
-              <div className="relative w-48 h-48 overflow-hidden">
-                <Image
-                  src={preview}
-                  alt="Preview"
-                  fill
-                  className="object-cover"
-                />
+          <div className="bg-card-inner">
+            {preview ? (
+              <div className="flex flex-col items-center gap-4 p-8">
+                <div className="relative w-48 h-48 overflow-hidden border border-card-border/20">
+                  <Image
+                    src={preview}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <p className="text-card-text/50 text-xs italic">
+                  Click or drag to replace
+                </p>
               </div>
-              <p className="text-muted text-xs tracking-wide">
-                Click or drag to replace
-              </p>
-            </div>
-          ) : (
-            <div className="py-6">
-              <p className="text-muted text-sm mb-2">
-                Drop image here or click to browse
-              </p>
-              <p className="text-muted/60 text-xs">
-                PNG, JPEG, GIF, WebP — max 5 MB
-              </p>
-            </div>
-          )}
+            ) : (
+              <div className="py-14 text-center">
+                <p className="text-accent text-2xl mb-3">&#x2726;</p>
+                <p className="text-card-text text-sm font-display tracking-wider uppercase mb-2">
+                  Drop your buddy&apos;s portrait here
+                </p>
+                <p className="text-card-text/40 text-xs italic">
+                  PNG, JPEG, GIF, WebP &mdash; max 5 MB
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Name */}
         <div>
-          <label htmlFor="name" className="block text-xs tracking-[0.1em] uppercase text-muted mb-3">
-            Name <span className="text-highlight">*</span>
+          <label htmlFor="name" className="block font-display text-xs tracking-[0.2em] uppercase text-muted mb-3">
+            Companion Name <span className="text-accent">*</span>
           </label>
           <input
             id="name"
@@ -157,15 +166,15 @@ export default function UploadPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Gravy the Capybara"
-            className="input-field w-full px-0 py-3 bg-transparent border-0 border-b border-card-border
-                       placeholder:text-muted/30 text-sm"
+            className="input-field w-full px-4 py-3 bg-surface/50 border border-card-border text-sm italic
+                       placeholder:text-muted/30"
           />
         </div>
 
         {/* Author */}
         <div>
-          <label htmlFor="author" className="block text-xs tracking-[0.1em] uppercase text-muted mb-3">
-            Author
+          <label htmlFor="author" className="block font-display text-xs tracking-[0.2em] uppercase text-muted mb-3">
+            Wizard Name
           </label>
           <input
             id="author"
@@ -174,15 +183,15 @@ export default function UploadPage() {
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             placeholder="Anonymous"
-            className="input-field w-full px-0 py-3 bg-transparent border-0 border-b border-card-border
-                       placeholder:text-muted/30 text-sm"
+            className="input-field w-full px-4 py-3 bg-surface/50 border border-card-border text-sm italic
+                       placeholder:text-muted/30"
           />
         </div>
 
         {/* Description */}
         <div>
-          <label htmlFor="description" className="block text-xs tracking-[0.1em] uppercase text-muted mb-3">
-            Description
+          <label htmlFor="description" className="block font-display text-xs tracking-[0.2em] uppercase text-muted mb-3">
+            Lore
           </label>
           <textarea
             id="description"
@@ -190,16 +199,16 @@ export default function UploadPage() {
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Tell us about your buddy..."
-            className="input-field w-full px-0 py-3 bg-transparent border-0 border-b border-card-border
-                       placeholder:text-muted/30 text-sm resize-none"
+            placeholder="Tell the tale of your companion..."
+            className="input-field w-full px-4 py-3 bg-surface/50 border border-card-border text-sm italic
+                       placeholder:text-muted/30 resize-none"
           />
         </div>
 
         {/* Error */}
         {error && (
-          <div className="border border-card-border px-5 py-3">
-            <p className="text-sm">{error}</p>
+          <div className="border border-accent/30 bg-accent-light px-5 py-3">
+            <p className="text-accent text-sm italic">{error}</p>
           </div>
         )}
 
@@ -207,10 +216,10 @@ export default function UploadPage() {
         <button
           type="submit"
           disabled={isSubmitting || !file || !name.trim()}
-          className="btn-primary w-full py-3.5 bg-foreground text-background text-xs tracking-[0.15em] uppercase font-medium
-                     disabled:opacity-30 disabled:cursor-not-allowed transition-opacity duration-300"
+          className="btn-magic w-full py-3.5 bg-accent text-background font-display text-xs tracking-[0.2em] uppercase
+                     disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
         >
-          {isSubmitting ? "Uploading..." : "Submit"}
+          {isSubmitting ? "Casting..." : "Register Companion"}
         </button>
       </form>
     </div>
