@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { VT323 } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const vt323 = VT323({
+  weight: "400",
+  variable: "--font-vt323",
   subsets: ["latin"],
 });
 
@@ -25,28 +21,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        {/* Navigation */}
-        <nav className="border-b border-card-border bg-card-bg/80 backdrop-blur-sm sticky top-0 z-50">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link
-                href="/"
-                className="flex items-center gap-2 text-xl font-bold text-foreground hover:text-accent transition-colors"
-              >
-                <span className="text-2xl">🏠</span>
-                <span>Buddy Utopia</span>
-              </Link>
-              <Link
-                href="/upload"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-lg font-medium hover:bg-accent/90 transition-colors"
-              >
-                <span className="text-lg">+</span>
-                Upload Buddy
+    <html lang="en" className={`${vt323.variable} h-full`}>
+      <body className="win2k-desktop-bg min-h-full flex flex-col">
+        {/* Win2K Taskbar (top) */}
+        <nav className="win2k-taskbar">
+          <div className="max-w-6xl mx-auto px-2 flex justify-between items-center h-full">
+            <Link href="/" className="win2k-start-btn">
+              <span className="font-bold italic mr-1">B</span>
+              Buddy Utopia
+            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/upload" className="win2k-taskbar-btn">
+                + Upload Buddy
               </Link>
             </div>
           </div>
@@ -55,12 +41,10 @@ export default function RootLayout({
         {/* Main Content */}
         <main className="flex-1">{children}</main>
 
-        {/* Footer */}
-        <footer className="border-t border-card-border py-6 mt-12">
-          <div className="max-w-6xl mx-auto px-4 text-center text-muted text-sm">
-            <p>
-              Buddy Utopia — A home for every Claude buddy ✨
-            </p>
+        {/* Footer / Status */}
+        <footer className="win2k-taskbar border-t-2 border-white/60 mt-auto">
+          <div className="max-w-6xl mx-auto px-4 flex items-center h-full text-xs">
+            <p>Buddy Utopia — A home for every Claude buddy</p>
           </div>
         </footer>
       </body>
