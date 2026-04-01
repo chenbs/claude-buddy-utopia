@@ -30,19 +30,19 @@ export default async function BuddyDetailPage({ params }: PageProps) {
   });
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-12 sm:py-16">
       <Link
         href="/"
-        className="inline-flex items-center gap-1 text-muted hover:text-accent transition-colors mb-8"
+        className="inline-flex items-center gap-2 text-sm tracking-wide uppercase text-muted hover:text-accent transition-colors duration-300 mb-10"
       >
-        ← Back to gallery
+        <span className="text-lg">←</span> Back to gallery
       </Link>
 
-      <div className="bg-card-bg border border-card-border rounded-2xl overflow-hidden">
+      <div className="bg-card-bg border border-card-border rounded-3xl overflow-hidden shadow-sm">
         <div className="md:flex">
           {/* Image */}
           <div className="md:w-1/2">
-            <div className="aspect-square relative bg-accent-light">
+            <div className="aspect-square relative bg-surface overflow-hidden">
               <Image
                 src={buddy.image_url}
                 alt={buddy.name}
@@ -55,20 +55,25 @@ export default async function BuddyDetailPage({ params }: PageProps) {
           </div>
 
           {/* Info */}
-          <div className="md:w-1/2 p-6 sm:p-8 flex flex-col justify-center">
-            <h1 className="text-3xl font-bold mb-2">{buddy.name}</h1>
-            <p className="text-muted mb-4">
-              by <span className="font-medium text-foreground">{buddy.author}</span>
+          <div className="md:w-1/2 p-8 sm:p-12 flex flex-col justify-center">
+            <p className="text-xs font-medium tracking-[0.2em] uppercase text-accent mb-4">
+              Meet the buddy
+            </p>
+            <h1 className="font-display text-4xl sm:text-5xl italic mb-3">
+              {buddy.name}
+            </h1>
+            <p className="text-muted text-sm tracking-wide uppercase mb-6">
+              by <span className="text-foreground">{buddy.author}</span>
             </p>
 
             {buddy.description && (
-              <p className="text-foreground/80 leading-relaxed mb-6 whitespace-pre-wrap">
+              <p className="text-foreground/75 leading-relaxed text-base mb-8 whitespace-pre-wrap">
                 {buddy.description}
               </p>
             )}
 
-            <div className="mt-auto pt-4 border-t border-card-border">
-              <p className="text-muted text-sm">
+            <div className="mt-auto pt-6 border-t border-card-border/60">
+              <p className="text-muted text-xs tracking-wide uppercase">
                 Uploaded on {createdDate}
               </p>
             </div>
