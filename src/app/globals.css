@@ -147,29 +147,7 @@ body {
 }
 
 /* ============ STAMP CARD ============ */
-.buddy-card {
-  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-}
-.buddy-card::before {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border: 1px solid var(--card-border);
-  pointer-events: none;
-  z-index: 10;
-  opacity: 0.4;
-  transition: opacity 0.4s ease, border-color 0.4s ease;
-}
-.buddy-card:hover {
-  box-shadow:
-    0 0 24px var(--glow),
-    0 20px 40px rgba(0, 0, 0, 0.12);
-}
-.buddy-card:hover::before {
-  opacity: 0.8;
-  border-color: var(--highlight);
-}
+/* (legacy compat — replaced by .magic-card below) */
 
 /* ============ IMAGE HOVER ============ */
 .img-reveal {
@@ -177,8 +155,8 @@ body {
               filter 0.5s ease;
 }
 .group:hover .img-reveal {
-  transform: scale(1.05);
-  filter: brightness(1.1);
+  transform: scale(1.08);
+  filter: brightness(1.12);
 }
 
 /* ============ DROP ZONE ============ */
@@ -300,13 +278,129 @@ body {
   background: linear-gradient(90deg, transparent, var(--card-border), transparent);
 }
 
+/* ============ PREMIUM MAGIC CARD ============ */
+.magic-card {
+  display: block;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Golden gradient border */
+.magic-card-border {
+  background: linear-gradient(
+    135deg,
+    rgba(201, 168, 76, 0.5) 0%,
+    rgba(201, 168, 76, 0.15) 30%,
+    rgba(201, 168, 76, 0.4) 50%,
+    rgba(201, 168, 76, 0.15) 70%,
+    rgba(201, 168, 76, 0.5) 100%
+  );
+  padding: 1px;
+  transition: box-shadow 0.4s ease;
+}
+
+.group:hover .magic-card-border {
+  box-shadow:
+    0 0 20px var(--glow),
+    0 0 60px rgba(201, 168, 76, 0.1),
+    0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Card inner background */
+.magic-card-inner {
+  background: linear-gradient(165deg, var(--card-inner) 0%, #12102a 100%);
+  position: relative;
+}
+
+/* Ambient glow inside card on hover */
+.magic-card-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    rgba(201, 168, 76, 0.06) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.group:hover .magic-card-inner::before {
+  opacity: 1;
+}
+
+/* Rune watermark background */
+.magic-card-rune {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  transform: translate(-50%, -50%);
+  color: var(--accent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Corner filigree */
+.magic-card-corners {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.magic-card-corners::before,
+.magic-card-corners::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: var(--accent);
+  opacity: 0.4;
+  transition: opacity 0.4s ease;
+}
+.magic-card-corners::before {
+  top: 4px;
+  left: 4px;
+  border-top: 1.5px solid;
+  border-left: 1.5px solid;
+}
+.magic-card-corners::after {
+  bottom: 4px;
+  right: 4px;
+  border-bottom: 1.5px solid;
+  border-right: 1.5px solid;
+}
+.group:hover .magic-card-corners::before,
+.group:hover .magic-card-corners::after {
+  opacity: 0.7;
+}
+
+/* Image golden frame */
+.magic-card-img-frame {
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+.magic-card-img-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(201, 168, 76, 0.08);
+  margin: 3px;
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* ============ 3D CARD TILT ============ */
 .card-3d {
   --shine-x: 50%;
   --shine-y: 50%;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 
@@ -318,8 +412,8 @@ body {
   border-radius: inherit;
   background: radial-gradient(
     circle at var(--shine-x) var(--shine-y),
-    rgba(201, 168, 76, 0.12) 0%,
-    transparent 60%
+    rgba(255, 240, 200, 0.15) 0%,
+    transparent 55%
   );
   opacity: 0;
   transition: opacity 0.35s ease;
@@ -328,9 +422,59 @@ body {
   opacity: 1;
 }
 
+/* ============ DETAIL PAGE CARD ============ */
+.detail-card-border {
+  background: linear-gradient(
+    135deg,
+    rgba(201, 168, 76, 0.5) 0%,
+    rgba(201, 168, 76, 0.15) 25%,
+    rgba(201, 168, 76, 0.45) 50%,
+    rgba(201, 168, 76, 0.15) 75%,
+    rgba(201, 168, 76, 0.5) 100%
+  );
+}
+
+.detail-card-outer {
+  background: var(--card-bg);
+  border: 1px dashed var(--card-border);
+}
+
+.detail-card-inner {
+  background: linear-gradient(165deg, var(--card-inner) 0%, #0f0e22 100%);
+}
+
+/* Detail card corner ornaments */
+.detail-corners {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+.detail-corners::before,
+.detail-corners::after {
+  content: "";
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-color: var(--accent);
+  opacity: 0.5;
+}
+.detail-corners::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.detail-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
 /* ============ MAGIC BOOK TRANSITION ============ */
 
-/* Full-screen overlay */
+/* Overlay container */
 .book-overlay {
   position: fixed;
   inset: 0;
@@ -339,19 +483,22 @@ body {
   align-items: center;
   justify-content: center;
   pointer-events: all;
-  animation: book-overlay-in 0.5s ease-out forwards;
 }
 
-.book-overlay-closing {
-  animation: book-overlay-in 0.3s ease-out forwards;
+/* Dark backdrop */
+.book-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 12, 29, 0.95);
+  animation: fade-in 0.4s ease-out both;
 }
 
-@keyframes book-overlay-in {
-  0%   { background: transparent; }
-  100% { background: rgba(13, 12, 29, 0.92); }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-/* Magical glow */
+/* Ambient glow */
 .book-glow {
   position: absolute;
   width: 500px;
@@ -359,38 +506,52 @@ body {
   border-radius: 50%;
   background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
   filter: blur(50px);
-  animation: book-glow-in 1.4s ease-out forwards;
+  animation: book-glow-in 1.2s ease-out both;
 }
 
 .book-glow-closing {
-  animation: book-glow-out 0.8s ease-in forwards;
+  animation: book-glow-out 1s 0.2s ease-in both;
 }
 
 @keyframes book-glow-in {
   0%   { transform: scale(0); opacity: 0; }
-  40%  { transform: scale(0.8); opacity: 1; }
-  100% { transform: scale(1.2); opacity: 0.5; }
+  50%  { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(1.1); opacity: 0.4; }
 }
 
 @keyframes book-glow-out {
-  0%   { transform: scale(1.2); opacity: 0.5; }
-  100% { transform: scale(0.3); opacity: 0; }
+  0%   { transform: scale(1.1); opacity: 0.4; }
+  100% { transform: scale(0); opacity: 0; }
 }
 
 /* 3D scene container */
 .book-scene {
   perspective: 1800px;
-  width: 520px;
-  height: 380px;
-  animation: book-scene-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  width: 480px;
+  height: 350px;
+  position: relative;
+  z-index: 2;
 }
 
-@keyframes book-scene-enter {
-  0%   { transform: scale(0.4) translateY(40px); opacity: 0; }
+.book-scene-enter {
+  animation: book-scene-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.book-scene-closing {
+  animation: book-scene-out 0.5s 0.7s ease-in both;
+}
+
+@keyframes book-scene-in {
+  0%   { transform: scale(0.3) translateY(50px); opacity: 0; }
   100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
-/* Book body — preserve-3d so cover can flip in 3D */
+@keyframes book-scene-out {
+  0%   { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.3) translateY(50px); opacity: 0; }
+}
+
+/* Book body */
 .book-body {
   position: relative;
   width: 100%;
@@ -398,7 +559,7 @@ body {
   transform-style: preserve-3d;
 }
 
-/* ── Back page (static, revealed when cover opens) ── */
+/* Back page (static inner pages) */
 .book-back-page {
   position: absolute;
   inset: 0;
@@ -410,7 +571,6 @@ body {
     inset 0 0 40px rgba(201, 168, 76, 0.04),
     0 8px 32px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  /* Initial state: slightly behind */
   transform: translateZ(-1px);
 }
 
@@ -433,7 +593,12 @@ body {
   width: 70%;
   height: 70%;
   opacity: 0;
-  animation: book-symbol-reveal 0.5s 0.6s ease-out forwards;
+  animation: book-symbol-reveal 0.4s 0.8s ease-out forwards;
+}
+
+.book-page-symbol-visible {
+  opacity: 1;
+  animation: none;
 }
 
 @keyframes book-symbol-reveal {
@@ -441,35 +606,35 @@ body {
   100% { opacity: 1; transform: scale(1); }
 }
 
-/* ── Cover (the flipping part) ── */
+/* Cover */
 .book-cover {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  /* Pivot on the LEFT edge */
   transform-origin: left center;
-  /* Start closed (rotateY 0), animate to open (-160deg) */
-  animation: book-cover-open 0.9s 0.25s cubic-bezier(0.32, 0.72, 0.35, 1.0) forwards;
   transform: rotateY(0deg);
 }
 
+.book-cover-flipping {
+  animation: book-cover-open 0.9s cubic-bezier(0.32, 0.72, 0.35, 1.0) forwards;
+}
+
 .book-cover-closing {
-  /* Start open, animate back to closed */
-  animation: book-cover-close 0.7s 0.1s cubic-bezier(0.5, 0, 0.75, 0.5) forwards;
-  transform: rotateY(-160deg);
+  animation: book-cover-close 0.65s 0.05s cubic-bezier(0.55, 0, 0.8, 0.4) forwards;
+  transform: rotateY(-155deg);
 }
 
 @keyframes book-cover-open {
   0%   { transform: rotateY(0deg); }
-  100% { transform: rotateY(-160deg); }
+  100% { transform: rotateY(-155deg); }
 }
 
 @keyframes book-cover-close {
-  0%   { transform: rotateY(-160deg); }
+  0%   { transform: rotateY(-155deg); }
   100% { transform: rotateY(0deg); }
 }
 
-/* Front of cover (visible when book is closed) */
+/* Cover faces */
 .book-cover-front {
   position: absolute;
   inset: 0;
@@ -483,7 +648,6 @@ body {
   overflow: hidden;
 }
 
-/* Parchment grain texture on cover */
 .book-cover-front::before {
   content: "";
   position: absolute;
@@ -492,19 +656,17 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Back of cover (visible when flipped open) */
 .book-cover-back {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
   transform: rotateY(180deg);
   background: linear-gradient(135deg, #1e1b3a 0%, #15132b 50%, #1a1730 100%);
-  border: 1px solid rgba(201, 168, 76, 0.4);
+  border: 1px solid rgba(201, 168, 76, 0.35);
   border-radius: 4px;
-  overflow: hidden;
 }
 
-/* Cover design content */
+/* Cover design */
 .book-cover-design {
   display: flex;
   align-items: center;
@@ -518,7 +680,7 @@ body {
   height: 90%;
 }
 
-/* Spine line */
+/* Spine */
 .book-spine-line {
   position: absolute;
   left: 0;
@@ -526,17 +688,65 @@ body {
   bottom: -2px;
   width: 4px;
   background: var(--accent);
-  opacity: 0.4;
+  opacity: 0.3;
   border-radius: 2px;
-  box-shadow: 0 0 16px var(--glow);
+  box-shadow: 0 0 12px var(--glow);
   z-index: 5;
-  animation: book-spine-pulse 0.9s 0.25s ease-out forwards;
+}
+
+.book-spine-active {
+  animation: book-spine-pulse 0.8s ease-out forwards;
 }
 
 @keyframes book-spine-pulse {
-  0%   { box-shadow: 0 0 16px var(--glow); opacity: 0.4; }
-  50%  { box-shadow: 0 0 50px var(--glow), 0 0 80px var(--glow); opacity: 0.9; }
-  100% { box-shadow: 0 0 30px var(--glow), 0 0 60px var(--glow); opacity: 0.5; }
+  0%   { box-shadow: 0 0 12px var(--glow); opacity: 0.3; }
+  50%  { box-shadow: 0 0 40px var(--glow), 0 0 80px var(--glow); opacity: 0.9; }
+  100% { box-shadow: 0 0 25px var(--glow); opacity: 0.5; }
+}
+
+/* ─── Golden flash (opening) ─── */
+.book-golden-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 235, 170, 0.95) 0%,
+    rgba(201, 168, 76, 0.6) 30%,
+    rgba(201, 168, 76, 0.2) 60%,
+    transparent 100%
+  );
+  animation: golden-flash 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes golden-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(3);
+    background: rgba(255, 245, 220, 1);
+  }
+}
+
+/* ─── Golden unflash (closing — appears first, then fades) ─── */
+.book-golden-unflash {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(255, 245, 220, 0.9);
+  animation: golden-unflash 0.5s ease-out forwards;
+}
+
+@keyframes golden-unflash {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* Particles */
@@ -544,12 +754,11 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 5;
 }
 
 .book-particle {
   position: absolute;
-  width: 3px;
-  height: 3px;
   background: var(--highlight);
   border-radius: 50%;
   animation: book-particle-float 1s ease-out forwards;
@@ -562,39 +771,39 @@ body {
   inset: -3px;
   background: var(--highlight);
   border-radius: 50%;
-  opacity: 0.3;
-  filter: blur(3px);
+  opacity: 0.4;
+  filter: blur(4px);
 }
 
 @keyframes book-particle-float {
   0%   { opacity: 0; transform: translateY(0) scale(0); }
-  25%  { opacity: 0.9; }
-  100% { opacity: 0; transform: translateY(-100px) scale(1.3); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-120px) scale(1.2); }
 }
 
 /* ============ DETAIL PAGE ENTRANCE / EXIT ============ */
 .detail-page-enter {
-  animation: detail-enter 0.7s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: detail-enter 0.8s 0.05s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes detail-enter {
   0% {
     opacity: 0;
-    transform: scale(0.92) rotateX(4deg);
-    filter: brightness(1.4);
+    transform: scale(0.88);
+    filter: brightness(1.8) saturate(0.5);
   }
-  50% {
+  40% {
     opacity: 1;
-    filter: brightness(1.15);
+    filter: brightness(1.2) saturate(0.8);
   }
   100% {
-    transform: scale(1) rotateX(0deg);
-    filter: brightness(1);
+    transform: scale(1);
+    filter: brightness(1) saturate(1);
   }
 }
 
 .detail-page-exit {
-  animation: detail-exit 0.4s ease-in forwards;
+  animation: detail-exit 0.35s ease-in forwards;
 }
 
 @keyframes detail-exit {
@@ -605,19 +814,19 @@ body {
   }
   100% {
     opacity: 0;
-    transform: scale(0.92);
-    filter: brightness(1.3);
+    transform: scale(0.9);
+    filter: brightness(1.5) saturate(0.3);
   }
 }
 
-/* ============ RESPONSIVE BOOK ============ */
+/* ============ RESPONSIVE ============ */
 @media (max-width: 640px) {
   .book-scene {
-    width: 340px;
-    height: 250px;
+    width: 300px;
+    height: 220px;
   }
   .book-glow {
-    width: 300px;
-    height: 300px;
+    width: 280px;
+    height: 280px;
   }
 }
