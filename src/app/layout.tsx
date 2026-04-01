@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Space_Grotesk, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, Outfit, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+const cormorantGaramond = Cormorant_Garamond({
+  variable: "--font-cormorant-garamond",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["300", "400", "500"],
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
@@ -33,29 +33,24 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${spaceGrotesk.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${cormorantGaramond.variable} ${outfit.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {/* Navigation */}
-        <nav className="border-b border-card-border/60 bg-background/80 backdrop-blur-md sticky top-0 z-50">
+        <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-md">
+          <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 flex justify-between items-center h-16">
+            <Link href="/" className="font-display text-xl font-light tracking-wide hover:opacity-60 transition-opacity duration-300">
+              Buddy Utopia
+            </Link>
+            <Link
+              href="/upload"
+              className="btn-primary text-xs tracking-[0.15em] uppercase font-medium border border-foreground px-5 py-2 hover:bg-foreground hover:text-background transition-colors duration-300"
+            >
+              Upload
+            </Link>
+          </div>
           <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
-            <div className="flex justify-between items-center h-18">
-              <Link
-                href="/"
-                className="flex items-baseline gap-2 group"
-              >
-                <span className="font-display text-2xl italic text-foreground group-hover:text-accent transition-colors duration-300">
-                  Buddy Utopia
-                </span>
-              </Link>
-              <Link
-                href="/upload"
-                className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-white rounded-full text-sm font-medium tracking-wide uppercase"
-              >
-                <span className="text-base leading-none">+</span>
-                Upload
-              </Link>
-            </div>
+            <div className="h-px bg-card-border" />
           </div>
         </nav>
 
@@ -63,10 +58,11 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
 
         {/* Footer */}
-        <footer className="border-t border-card-border/40 py-8 mt-16">
+        <footer className="py-12 mt-20">
           <div className="max-w-6xl mx-auto px-6 text-center">
-            <p className="font-display italic text-muted text-lg">
-              A home for every Claude buddy
+            <div className="h-px bg-card-border mb-12" />
+            <p className="text-muted text-xs tracking-[0.2em] uppercase">
+              Buddy Utopia
             </p>
           </div>
         </footer>

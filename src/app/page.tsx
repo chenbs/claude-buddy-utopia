@@ -19,16 +19,12 @@ export default async function HomePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
-      {/* Hero — asymmetric editorial layout */}
-      <div className="pt-20 pb-16 sm:pt-28 sm:pb-20 max-w-3xl">
-        <p className="text-sm font-medium tracking-[0.2em] uppercase text-accent mb-6">
-          The Companion Gallery
-        </p>
-        <h1 className="font-display text-5xl sm:text-7xl leading-[1.05] mb-6">
-          Welcome to{" "}
-          <span className="italic text-accent">Buddy Utopia</span>
+      {/* Hero */}
+      <div className="py-24 sm:py-32 text-center">
+        <h1 className="font-display text-5xl sm:text-7xl font-light tracking-tight mb-6">
+          Buddy Utopia
         </h1>
-        <p className="text-muted text-lg sm:text-xl leading-relaxed max-w-lg">
+        <p className="text-muted text-sm sm:text-base tracking-wide max-w-md mx-auto leading-relaxed">
           A cozy gallery for Claude Code buddies.
           <br />
           Upload yours and let the world see your companion!
@@ -37,22 +33,22 @@ export default async function HomePage() {
 
       {/* Error State */}
       {error && (
-        <div className="bg-accent-light border-l-4 border-accent rounded-r-lg p-4 mb-10">
-          <p className="text-accent font-medium text-sm">{error}</p>
+        <div className="border border-card-border px-6 py-4 mb-12 text-center">
+          <p className="text-muted text-sm">{error}</p>
         </div>
       )}
 
       {/* Empty State */}
       {!error && buddies.length === 0 && (
-        <div className="py-24 text-center">
-          <p className="text-7xl mb-6">🦫</p>
-          <h2 className="font-display text-3xl italic mb-3">No buddies yet!</h2>
-          <p className="text-muted mb-8 text-lg">
+        <div className="text-center py-24">
+          <p className="text-5xl mb-8">🦫</p>
+          <h2 className="font-display text-2xl font-light mb-3">No buddies yet</h2>
+          <p className="text-muted text-sm mb-10">
             Be the first one to share your Claude buddy.
           </p>
           <Link
             href="/upload"
-            className="btn-primary inline-flex items-center gap-2 px-8 py-3.5 bg-accent text-white rounded-full font-medium tracking-wide uppercase text-sm"
+            className="btn-primary inline-block text-xs tracking-[0.15em] uppercase font-medium border border-foreground px-8 py-3 hover:bg-foreground hover:text-background transition-colors duration-300"
           >
             Upload the first buddy
           </Link>
@@ -62,18 +58,20 @@ export default async function HomePage() {
       {/* Gallery Grid */}
       {buddies.length > 0 && (
         <>
-          <div className="flex items-center gap-4 mb-8">
-            <h2 className="font-display text-2xl italic">All Buddies</h2>
-            <div className="flex-1 h-px bg-card-border/60" />
-            <span className="text-muted text-sm font-mono">{buddies.length}</span>
+          <div className="flex items-center gap-6 mb-10">
+            <div className="flex-1 h-px bg-card-border" />
+            <span className="text-xs tracking-[0.2em] uppercase text-muted">
+              {buddies.length} {buddies.length === 1 ? "buddy" : "buddies"}
+            </span>
+            <div className="flex-1 h-px bg-card-border" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 pb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-12">
             {buddies.map((buddy) => (
               <Link
                 key={buddy.id}
                 href={`/buddy/${buddy.id}`}
-                className="buddy-card group block bg-card-bg border border-card-border rounded-2xl overflow-hidden"
+                className="buddy-card group block bg-card-bg border border-card-border overflow-hidden"
               >
                 <div className="aspect-square relative bg-surface overflow-hidden">
                   <Image
@@ -84,11 +82,11 @@ export default async function HomePage() {
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-medium text-base truncate group-hover:text-accent transition-colors duration-300">
+                <div className="px-4 py-4">
+                  <h3 className="text-sm font-medium truncate">
                     {buddy.name}
                   </h3>
-                  <p className="text-muted text-xs mt-1 tracking-wide uppercase">
+                  <p className="text-muted text-xs mt-1">
                     {buddy.author}
                   </p>
                 </div>

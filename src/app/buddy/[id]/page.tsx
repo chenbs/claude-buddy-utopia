@@ -30,53 +30,48 @@ export default async function BuddyDetailPage({ params }: PageProps) {
   });
 
   return (
-    <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-12 sm:py-16">
+    <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-16 sm:py-24">
       <Link
         href="/"
-        className="inline-flex items-center gap-2 text-sm tracking-wide uppercase text-muted hover:text-accent transition-colors duration-300 mb-10"
+        className="inline-block text-xs tracking-[0.1em] uppercase text-muted hover:text-foreground transition-colors duration-300 mb-12"
       >
-        <span className="text-lg">←</span> Back to gallery
+        Back
       </Link>
 
-      <div className="bg-card-bg border border-card-border rounded-3xl overflow-hidden shadow-sm">
-        <div className="md:flex">
-          {/* Image */}
-          <div className="md:w-1/2">
-            <div className="aspect-square relative bg-surface overflow-hidden">
-              <Image
-                src={buddy.image_url}
-                alt={buddy.name}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority
-              />
-            </div>
+      <div className="md:flex md:gap-16">
+        {/* Image */}
+        <div className="md:w-1/2 mb-10 md:mb-0">
+          <div className="aspect-square relative bg-surface overflow-hidden">
+            <Image
+              src={buddy.image_url}
+              alt={buddy.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+            />
           </div>
+        </div>
 
-          {/* Info */}
-          <div className="md:w-1/2 p-8 sm:p-12 flex flex-col justify-center">
-            <p className="text-xs font-medium tracking-[0.2em] uppercase text-accent mb-4">
-              Meet the buddy
+        {/* Info */}
+        <div className="md:w-1/2 flex flex-col justify-center">
+          <h1 className="font-display text-4xl sm:text-5xl font-light tracking-tight mb-3">
+            {buddy.name}
+          </h1>
+          <p className="text-xs tracking-[0.1em] uppercase text-muted mb-8">
+            {buddy.author}
+          </p>
+
+          {buddy.description && (
+            <p className="text-foreground/70 text-sm leading-relaxed mb-10 whitespace-pre-wrap">
+              {buddy.description}
             </p>
-            <h1 className="font-display text-4xl sm:text-5xl italic mb-3">
-              {buddy.name}
-            </h1>
-            <p className="text-muted text-sm tracking-wide uppercase mb-6">
-              by <span className="text-foreground">{buddy.author}</span>
+          )}
+
+          <div className="mt-auto pt-6 border-t border-card-border">
+            <p className="text-muted text-xs tracking-wide">
+              {createdDate}
             </p>
-
-            {buddy.description && (
-              <p className="text-foreground/75 leading-relaxed text-base mb-8 whitespace-pre-wrap">
-                {buddy.description}
-              </p>
-            )}
-
-            <div className="mt-auto pt-6 border-t border-card-border/60">
-              <p className="text-muted text-xs tracking-wide uppercase">
-                Uploaded on {createdDate}
-              </p>
-            </div>
           </div>
         </div>
       </div>

@@ -80,18 +80,15 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto px-6 sm:px-8 py-16 sm:py-20">
-      <p className="text-sm font-medium tracking-[0.2em] uppercase text-accent mb-4">
-        New Submission
-      </p>
-      <h1 className="font-display text-4xl sm:text-5xl italic mb-3">
-        Upload Your Buddy
+    <div className="max-w-lg mx-auto px-6 sm:px-8 py-20 sm:py-28">
+      <h1 className="font-display text-4xl font-light tracking-tight text-center mb-3">
+        Upload
       </h1>
-      <p className="text-muted text-lg mb-12">
-        Share your Claude Code companion with the community!
+      <p className="text-muted text-sm text-center mb-16">
+        Share your Claude Code companion with the community.
       </p>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-10">
         {/* Drop Zone */}
         <div
           onDragOver={(e) => {
@@ -102,12 +99,11 @@ export default function UploadPage() {
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
           className={`
-            relative border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer
-            transition-all duration-300
+            border border-dashed p-12 text-center cursor-pointer transition-all duration-300
             ${
               isDragging
-                ? "border-accent bg-accent-light drop-zone-active"
-                : "border-card-border hover:border-accent/40 hover:bg-surface/50"
+                ? "border-highlight bg-accent-light drop-zone-active"
+                : "border-card-border hover:border-muted"
             }
           `}
         >
@@ -123,8 +119,8 @@ export default function UploadPage() {
           />
 
           {preview ? (
-            <div className="flex flex-col items-center gap-5">
-              <div className="relative w-52 h-52 rounded-xl overflow-hidden shadow-lg">
+            <div className="flex flex-col items-center gap-6">
+              <div className="relative w-48 h-48 overflow-hidden">
                 <Image
                   src={preview}
                   alt="Preview"
@@ -132,20 +128,17 @@ export default function UploadPage() {
                   className="object-cover"
                 />
               </div>
-              <p className="text-muted text-sm">
+              <p className="text-muted text-xs tracking-wide">
                 Click or drag to replace
               </p>
             </div>
           ) : (
-            <div className="py-10">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-surface flex items-center justify-center">
-                <span className="text-3xl">📸</span>
-              </div>
-              <p className="font-medium mb-1.5">
-                Drop your buddy image here
+            <div className="py-6">
+              <p className="text-muted text-sm mb-2">
+                Drop image here or click to browse
               </p>
-              <p className="text-muted text-sm">
-                or click to browse — PNG, JPEG, GIF, WebP (max 5MB)
+              <p className="text-muted/60 text-xs">
+                PNG, JPEG, GIF, WebP — max 5 MB
               </p>
             </div>
           )}
@@ -153,11 +146,8 @@ export default function UploadPage() {
 
         {/* Name */}
         <div>
-          <label
-            htmlFor="name"
-            className="block text-xs font-medium tracking-[0.15em] uppercase text-muted mb-2"
-          >
-            Buddy Name <span className="text-accent">*</span>
+          <label htmlFor="name" className="block text-xs tracking-[0.1em] uppercase text-muted mb-3">
+            Name <span className="text-highlight">*</span>
           </label>
           <input
             id="name"
@@ -166,19 +156,16 @@ export default function UploadPage() {
             maxLength={60}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder='e.g. "Gravy the Capybara"'
-            className="input-field w-full px-4 py-3 bg-card-bg border border-card-border rounded-xl
-                       placeholder:text-muted/40"
+            placeholder="Gravy the Capybara"
+            className="input-field w-full px-0 py-3 bg-transparent border-0 border-b border-card-border
+                       placeholder:text-muted/30 text-sm"
           />
         </div>
 
         {/* Author */}
         <div>
-          <label
-            htmlFor="author"
-            className="block text-xs font-medium tracking-[0.15em] uppercase text-muted mb-2"
-          >
-            Your Name
+          <label htmlFor="author" className="block text-xs tracking-[0.1em] uppercase text-muted mb-3">
+            Author
           </label>
           <input
             id="author"
@@ -187,17 +174,14 @@ export default function UploadPage() {
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             placeholder="Anonymous"
-            className="input-field w-full px-4 py-3 bg-card-bg border border-card-border rounded-xl
-                       placeholder:text-muted/40"
+            className="input-field w-full px-0 py-3 bg-transparent border-0 border-b border-card-border
+                       placeholder:text-muted/30 text-sm"
           />
         </div>
 
         {/* Description */}
         <div>
-          <label
-            htmlFor="description"
-            className="block text-xs font-medium tracking-[0.15em] uppercase text-muted mb-2"
-          >
+          <label htmlFor="description" className="block text-xs tracking-[0.1em] uppercase text-muted mb-3">
             Description
           </label>
           <textarea
@@ -207,15 +191,15 @@ export default function UploadPage() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Tell us about your buddy..."
-            className="input-field w-full px-4 py-3 bg-card-bg border border-card-border rounded-xl
-                       placeholder:text-muted/40 resize-none"
+            className="input-field w-full px-0 py-3 bg-transparent border-0 border-b border-card-border
+                       placeholder:text-muted/30 text-sm resize-none"
           />
         </div>
 
         {/* Error */}
         {error && (
-          <div className="bg-accent-light border-l-4 border-accent rounded-r-xl px-4 py-3">
-            <p className="text-accent text-sm font-medium">{error}</p>
+          <div className="border border-card-border px-5 py-3">
+            <p className="text-sm">{error}</p>
           </div>
         )}
 
@@ -223,11 +207,10 @@ export default function UploadPage() {
         <button
           type="submit"
           disabled={isSubmitting || !file || !name.trim()}
-          className="btn-primary w-full py-3.5 bg-accent text-white rounded-full font-medium
-                     tracking-wide uppercase text-sm
-                     disabled:opacity-40 disabled:cursor-not-allowed"
+          className="btn-primary w-full py-3.5 bg-foreground text-background text-xs tracking-[0.15em] uppercase font-medium
+                     disabled:opacity-30 disabled:cursor-not-allowed transition-opacity duration-300"
         >
-          {isSubmitting ? "Uploading..." : "Upload Buddy"}
+          {isSubmitting ? "Uploading..." : "Submit"}
         </button>
       </form>
     </div>
