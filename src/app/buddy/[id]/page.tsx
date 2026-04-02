@@ -75,20 +75,33 @@ export default async function BuddyDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="md:flex">
-                  {/* Image side */}
+                  {/* Image or Text side */}
                   <div className="md:w-1/2 relative">
-                    <div className="aspect-square relative overflow-hidden">
-                      <Image
-                        src={buddy.image_url}
-                        alt={buddy.name}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority
-                      />
-                      {/* Subtle vignette overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-card-inner/60 via-transparent to-transparent pointer-events-none" />
-                    </div>
+                    {buddy.text_content ? (
+                      /* ASCII art display */
+                      <div className="aspect-square relative overflow-hidden flex items-center justify-center bg-gradient-to-b from-card-inner to-[#0f0e20] p-6">
+                        <pre className="font-mono text-xs sm:text-sm leading-tight whitespace-pre text-accent/80 select-all">
+                          {buddy.text_content}
+                        </pre>
+                        {/* Subtle glow behind text */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-card-inner/60 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-accent/[0.03] rounded-full blur-3xl pointer-events-none" />
+                      </div>
+                    ) : (
+                      /* Image display */
+                      <div className="aspect-square relative overflow-hidden">
+                        <Image
+                          src={buddy.image_url}
+                          alt={buddy.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          priority
+                        />
+                        {/* Subtle vignette overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-card-inner/60 via-transparent to-transparent pointer-events-none" />
+                      </div>
+                    )}
                   </div>
 
                   {/* Info side */}

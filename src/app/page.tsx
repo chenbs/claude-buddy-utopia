@@ -13,6 +13,7 @@ import {
   WizardHat,
 } from "@/components/MagicElements";
 import { BuddyGallery } from "@/components/BuddyGallery";
+import { WalkingBuddies } from "@/components/WalkingBuddies";
 
 // Revalidate every 60 seconds so new uploads show up
 export const revalidate = 60;
@@ -29,8 +30,24 @@ export default async function HomePage() {
       "Could not connect to the database. Make sure DATABASE_URL is set.";
   }
 
+  // Separate image buddies from text buddies
+  const imageBuddies = buddies.filter((b) => b.image_url && !b.text_content);
+  const textBuddies = buddies.filter((b) => b.text_content);
+
   return (
     <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
+      {/* Walking text buddies — roam the entire page */}
+      {textBuddies.length > 0 && (
+        <WalkingBuddies
+          buddies={textBuddies.map((b) => ({
+            id: b.id,
+            name: b.name,
+            author: b.author,
+            text_content: b.text_content!,
+          }))}
+        />
+      )}
+
       {/* ======= HERO with magical decorations ======= */}
       <div className="relative py-24 sm:py-32 text-center overflow-hidden">
         {/* Floating sparkle particles */}
@@ -103,8 +120,8 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* ======= GALLERY ======= */}
-      {buddies.length > 0 && (
+      {/* ======= GALLERY (image buddies only) ======= */}
+      {imageBuddies.length > 0 && (
         <>
           {/* Section header with decorations */}
           <div className="relative mb-10">
@@ -112,15 +129,35 @@ export default async function HomePage() {
               <span className="flex items-center gap-3 px-2">
                 <SpellBook className="w-6 h-5 text-accent opacity-40" />
                 <span className="font-display text-xs tracking-[0.25em] uppercase text-muted">
-                  {buddies.length} {buddies.length === 1 ? "Companion" : "Companions"} Registered
+                  {imageBuddies.length} Portrait{imageBuddies.length !== 1 ? "s" : ""} Registered
+                  {textBuddies.length > 0 && (
+                    <span className="text-accent/50">
+                      {" "}&middot; {textBuddies.length} Wandering
+                    </span>
+                  )}
                 </span>
                 <SpellBook className="w-6 h-5 text-accent opacity-40 scale-x-[-1]" />
               </span>
             </div>
           </div>
 
-          <BuddyGallery buddies={buddies} />
+          <BuddyGallery buddies={imageBuddies} />
         </>
+      )}
+
+      {/* Show count only for text-only scenario */}
+      {imageBuddies.length === 0 && textBuddies.length > 0 && !error && (
+        <div className="relative mb-10">
+          <div className="divider-diamond">
+            <span className="flex items-center gap-3 px-2">
+              <SpellBook className="w-6 h-5 text-accent opacity-40" />
+              <span className="font-display text-xs tracking-[0.25em] uppercase text-muted">
+                {textBuddies.length} Wandering Companion{textBuddies.length !== 1 ? "s" : ""}
+              </span>
+              <SpellBook className="w-6 h-5 text-accent opacity-40 scale-x-[-1]" />
+            </span>
+          </div>
+        </div>
       )}
     </div>
   );

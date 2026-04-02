@@ -9,6 +9,7 @@ interface Buddy {
   name: string;
   author: string;
   image_url: string;
+  text_content: string | null;
   description: string | null;
   created_at: string;
 }
