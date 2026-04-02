@@ -93,7 +93,7 @@ export default function UploadPage() {
                 placeholder={"Paste your CLI buddy here...\n\n   /\\_/\\\n  ( o.o )\n   > ^ <"}
                 rows={20}
                 className="input-field w-full px-4 py-3 bg-surface/30 border border-card-border text-sm
-                           font-mono leading-relaxed placeholder:text-muted/20 resize-y whitespace-pre min-h-[320px]"
+                           font-mono leading-relaxed placeholder:text-muted/50 resize-y whitespace-pre min-h-[320px]"
               />
               <p className="text-card-text/30 text-[14px] italic mt-2 text-center">
                 Box-drawing characters (─ ╰ │ ╭ ╮ ╯) will be automatically removed
