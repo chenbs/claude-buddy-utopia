@@ -864,7 +864,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100%;
   pointer-events: none;
   z-index: 15;
@@ -919,12 +919,12 @@ body {
 .walking-buddy-body {
   background: linear-gradient(
     135deg,
-    #f5e6b8 0%,
-    #e0c97a 15%,
-    #8fd4f0 35%,
-    #f5e6b8 55%,
-    #f0b0c8 75%,
-    #f5e6b8 100%
+    #d4a83a 0%,
+    #c49520 15%,
+    #4aa8d4 35%,
+    #d4a83a 55%,
+    #d47a9a 75%,
+    #d4a83a 100%
   );
   background-size: 300% 300%;
   -webkit-background-clip: text;

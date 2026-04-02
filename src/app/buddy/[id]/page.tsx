@@ -123,7 +123,7 @@ export default async function BuddyDetailPage({ params }: PageProps) {
                     <h1 className="font-display text-2xl sm:text-3xl tracking-[0.06em] uppercase font-medium text-card-text mb-2">
                       {buddy.name}
                     </h1>
-                    <p className="text-card-text/40 text-xs italic mb-8 flex items-center gap-2">
+                    <p className="text-card-text/40 text-lg italic mb-8 flex items-center gap-2">
                       <span className="text-highlight/30 text-[8px]">&#x2726;</span>
                       Summoned by {buddy.author}
                       <span className="text-highlight/30 text-[8px]">&#x2726;</span>
@@ -145,7 +145,7 @@ export default async function BuddyDetailPage({ params }: PageProps) {
 
                     {/* Footer */}
                     <div className="mt-auto pt-5 border-t border-card-border/20 flex items-center justify-between">
-                      <p className="text-card-text/25 text-[10px] tracking-[0.15em] uppercase">
+                      <p className="text-card-text/25 text-[12px] tracking-[0.15em] uppercase">
                         Registered &mdash; {createdDate}
                       </p>
                       <div className="flex gap-1">
