@@ -174,18 +174,26 @@ function WalkingBuddy({ id, name, author, textContent, index, isSpecial }: Walki
   // Speed multiplier: 30% faster than before
   const speedMul = 1.3;
 
+  const getPageHeight = useCallback(() => {
+    return Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight,
+      window.innerHeight
+    );
+  }, []);
+
   const pickNewTarget = useCallback(() => {
     const margin = 60;
     const maxX = Math.max(window.innerWidth - 280, margin);
-    const maxY = Math.max(document.documentElement.scrollHeight - 200, 400);
+    const pageH = getPageHeight();
 
     targetRef.current = {
       x: margin + Math.random() * (maxX - margin),
-      y: 120 + Math.random() * Math.min(maxY - 120, window.innerHeight - 150),
+      y: 120 + Math.random() * Math.max(pageH - 250, 200),
     };
     // Schedule next mid-walk retarget
     nextRetargetRef.current = frameCountRef.current + 80 + Math.random() * 200;
-  }, []);
+  }, [getPageHeight]);
 
   // Trigger a surprise action
   const doSurpriseAction = useCallback(() => {
@@ -301,10 +309,10 @@ function WalkingBuddy({ id, name, author, textContent, index, isSpecial }: Walki
 
     const margin = 60;
     const maxX = Math.max(window.innerWidth - 280, margin);
-    const maxY = Math.max(window.innerHeight - 200, 300);
+    const pageH = getPageHeight();
 
     const startX = margin + Math.random() * (maxX - margin);
-    const startY = 120 + Math.random() * (maxY - 120);
+    const startY = 120 + Math.random() * Math.max(pageH - 250, 200);
 
     posRef.current = { x: startX, y: startY };
     speedRef.current = (0.6 + Math.random() * 0.8) * speedMul;
@@ -390,7 +398,7 @@ function WalkingBuddy({ id, name, author, textContent, index, isSpecial }: Walki
         pos.y += velocityRef.current.y;
 
         pos.x = Math.max(10, Math.min(window.innerWidth - 60, pos.x));
-        pos.y = Math.max(80, Math.min(window.innerHeight - 60, pos.y));
+        pos.y = Math.max(80, Math.min(getPageHeight() - 60, pos.y));
 
         if (Math.abs(velocityRef.current.x) > 0.05) {
           setDirection(velocityRef.current.x > 0 ? 1 : -1);
@@ -405,7 +413,7 @@ function WalkingBuddy({ id, name, author, textContent, index, isSpecial }: Walki
     };
 
     animFrameRef.current = requestAnimationFrame(tick);
-  }, [pickNewTarget, doSurpriseAction, speedMul]);
+  }, [pickNewTarget, doSurpriseAction, speedMul, getPageHeight]);
 
   const speedClass = speedRef.current > 2 ? "walking-fast" : "walking-normal";
   const bobbingClass = isWalking && !isHovered && action === "walk" ? `walking-bobbing ${speedClass}` : "";
@@ -442,7 +450,7 @@ function WalkingBuddy({ id, name, author, textContent, index, isSpecial }: Walki
           {/* Special crown for dangerous buddies */}
           {isSpecial && (
             <div className="walking-buddy-crown">
-              <svg width="28" height="16" viewBox="0 0 28 16">
+              <svg width="34" height="19" viewBox="0 0 28 16">
                 <path d="M2 14 L5 4 L9 10 L14 2 L19 10 L23 4 L26 14 Z" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.8" />
                 <circle cx="5" cy="3" r="1.5" fill="var(--accent)" opacity="0.7" />
                 <circle cx="14" cy="1" r="1.5" fill="var(--accent)" opacity="0.7" />
