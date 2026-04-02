@@ -884,11 +884,6 @@ body {
   border-radius: 0;
 }
 
-.walking-buddy:hover .walking-buddy-body {
-  color: var(--accent);
-  text-shadow: 0 0 8px var(--glow);
-}
-
 /* Name label — hidden by default, shows on hover */
 .walking-buddy-label {
   display: flex;
@@ -913,22 +908,52 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
+/* ── Gradient animated text body ── */
+.walking-buddy-body-wrap {
+  position: relative;
+}
+
 .walking-buddy-body {
-  transition: color 0.3s ease, text-shadow 0.3s ease;
+  background: linear-gradient(
+    135deg,
+    #c9a84c 0%,
+    #e8d5a3 20%,
+    #7ecbf5 40%,
+    #c9a84c 60%,
+    #f0a0c0 80%,
+    #c9a84c 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: buddy-gradient-shift 6s ease-in-out infinite;
+}
+
+.walking-buddy:hover .walking-buddy-body {
+  filter: brightness(1.3);
+}
+
+@keyframes buddy-gradient-shift {
+  0%   { background-position: 0% 0%; }
+  25%  { background-position: 100% 0%; }
+  50%  { background-position: 100% 100%; }
+  75%  { background-position: 0% 100%; }
+  100% { background-position: 0% 0%; }
 }
 
 /* Walking bobbing animation */
 .walking-bobbing {
-  animation: buddy-bob 0.5s ease-in-out infinite;
+  animation: buddy-bob 0.4s ease-in-out infinite;
 }
 
 .walking-bobbing.walking-fast {
-  animation-duration: 0.25s;
+  animation-duration: 0.2s;
 }
 
 @keyframes buddy-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+  0%, 100% { transform: scale(0.8) translateY(0); }
+  50% { transform: scale(0.8) translateY(-3px); }
 }
 
 /* ── Legs ── */
@@ -948,28 +973,28 @@ body {
   margin-top: -1px;
 }
 
-/* Left leg walking animation */
+/* Left leg walking animation — faster */
 .buddy-leg-left {
-  animation: leg-step-left 0.5s ease-in-out infinite;
+  animation: leg-step-left 0.3s ease-in-out infinite;
 }
 
 @keyframes leg-step-left {
   0%, 100% { transform: rotate(0deg) translateY(0); }
-  25% { transform: rotate(-18deg) translateY(-2px); }
+  25% { transform: rotate(-22deg) translateY(-2px); }
   50% { transform: rotate(0deg) translateY(0); }
-  75% { transform: rotate(12deg) translateY(1px); }
+  75% { transform: rotate(15deg) translateY(1px); }
 }
 
-/* Right leg walking animation — offset phase */
+/* Right leg walking animation — offset phase, faster */
 .buddy-leg-right {
-  animation: leg-step-right 0.5s ease-in-out infinite;
+  animation: leg-step-right 0.3s ease-in-out infinite;
 }
 
 @keyframes leg-step-right {
   0%, 100% { transform: rotate(0deg) translateY(0); }
-  25% { transform: rotate(12deg) translateY(1px); }
+  25% { transform: rotate(15deg) translateY(1px); }
   50% { transform: rotate(0deg) translateY(0); }
-  75% { transform: rotate(-18deg) translateY(-2px); }
+  75% { transform: rotate(-22deg) translateY(-2px); }
 }
 
 /* Legs tuck up during jumps */

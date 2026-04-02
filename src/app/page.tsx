@@ -12,7 +12,6 @@ import {
   MagicDivider,
   WizardHat,
 } from "@/components/MagicElements";
-import { BuddyGallery } from "@/components/BuddyGallery";
 import { WalkingBuddies } from "@/components/WalkingBuddies";
 
 // Revalidate every 60 seconds so new uploads show up
@@ -30,8 +29,6 @@ export default async function HomePage() {
       "Could not connect to the database. Make sure DATABASE_URL is set.";
   }
 
-  // Separate image buddies from text buddies
-  const imageBuddies = buddies.filter((b) => b.image_url && !b.text_content);
   const textBuddies = buddies.filter((b) => b.text_content);
 
   return (
@@ -82,6 +79,17 @@ export default async function HomePage() {
             <br />
             Upload yours and let the world see your companion!
           </p>
+
+          {/* Companion count — below subtitle */}
+          {!error && buddies.length > 0 && (
+            <div className="flex items-center justify-center gap-3 mt-6">
+              <SpellBook className="w-5 h-4 text-accent opacity-40" />
+              <span className="font-display text-xs tracking-[0.25em] uppercase text-muted">
+                {buddies.length} Wandering Companion{buddies.length !== 1 ? "s" : ""}
+              </span>
+              <SpellBook className="w-5 h-4 text-accent opacity-40 scale-x-[-1]" />
+            </div>
+          )}
         </div>
       </div>
 
@@ -117,46 +125,6 @@ export default async function HomePage() {
           {/* Decorative potions beside */}
           <PotionBottle className="absolute left-8 sm:left-24 bottom-4 w-8 h-14 text-accent opacity-20 rotate-6" variant={1} />
           <PotionBottle className="absolute right-8 sm:right-24 bottom-8 w-7 h-12 text-accent opacity-20 -rotate-6" variant={2} />
-        </div>
-      )}
-
-      {/* ======= GALLERY (image buddies only) ======= */}
-      {imageBuddies.length > 0 && (
-        <>
-          {/* Section header with decorations */}
-          <div className="relative mb-10">
-            <div className="divider-diamond">
-              <span className="flex items-center gap-3 px-2">
-                <SpellBook className="w-6 h-5 text-accent opacity-40" />
-                <span className="font-display text-xs tracking-[0.25em] uppercase text-muted">
-                  {imageBuddies.length} Portrait{imageBuddies.length !== 1 ? "s" : ""} Registered
-                  {textBuddies.length > 0 && (
-                    <span className="text-accent/50">
-                      {" "}&middot; {textBuddies.length} Wandering
-                    </span>
-                  )}
-                </span>
-                <SpellBook className="w-6 h-5 text-accent opacity-40 scale-x-[-1]" />
-              </span>
-            </div>
-          </div>
-
-          <BuddyGallery buddies={imageBuddies} />
-        </>
-      )}
-
-      {/* Show count only for text-only scenario */}
-      {imageBuddies.length === 0 && textBuddies.length > 0 && !error && (
-        <div className="relative mb-10">
-          <div className="divider-diamond">
-            <span className="flex items-center gap-3 px-2">
-              <SpellBook className="w-6 h-5 text-accent opacity-40" />
-              <span className="font-display text-xs tracking-[0.25em] uppercase text-muted">
-                {textBuddies.length} Wandering Companion{textBuddies.length !== 1 ? "s" : ""}
-              </span>
-              <SpellBook className="w-6 h-5 text-accent opacity-40 scale-x-[-1]" />
-            </span>
-          </div>
         </div>
       )}
     </div>

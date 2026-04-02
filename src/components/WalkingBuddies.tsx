@@ -22,13 +22,13 @@ function BuddyLegs({ isWalking, direction, action }: {
   return (
     <div
       className="flex justify-center gap-3 relative"
-      style={{ transform: direction === -1 ? "scaleX(-1)" : undefined, height: 28 }}
+      style={{ transform: direction === -1 ? "scaleX(-1)" : undefined, height: 34 }}
     >
       {/* Left leg + foot */}
       <div className={`buddy-leg ${isWalking && !isJumping ? "buddy-leg-left" : ""} ${isJumping ? "buddy-leg-tuck" : ""}`}>
         {/* Leg */}
-        <svg width="4" height="12" viewBox="0 0 4 12" className="buddy-leg-line">
-          <line x1="2" y1="0" x2="2" y2="12" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
+        <svg width="4" height="20" viewBox="0 0 4 20" className="buddy-leg-line">
+          <line x1="2" y1="0" x2="2" y2="20" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
         </svg>
         {/* Foot */}
         <svg width="18" height="10" viewBox="0 0 18 10" className="buddy-foot">
@@ -43,8 +43,8 @@ function BuddyLegs({ isWalking, direction, action }: {
       {/* Right leg + foot */}
       <div className={`buddy-leg ${isWalking && !isJumping ? "buddy-leg-right" : ""} ${isJumping ? "buddy-leg-tuck" : ""}`}>
         {/* Leg */}
-        <svg width="4" height="12" viewBox="0 0 4 12" className="buddy-leg-line">
-          <line x1="2" y1="0" x2="2" y2="12" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
+        <svg width="4" height="20" viewBox="0 0 4 20" className="buddy-leg-line">
+          <line x1="2" y1="0" x2="2" y2="20" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
         </svg>
         {/* Foot */}
         <svg width="18" height="10" viewBox="0 0 18 10" className="buddy-foot">
@@ -81,16 +81,19 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
   const initDone = useRef(false);
   const frameCountRef = useRef(0);
   const nextSurpriseRef = useRef(120 + Math.random() * 300);
+  const nextRetargetRef = useRef(60 + Math.random() * 120);
 
   const pickNewTarget = useCallback(() => {
-    const margin = 40;
-    const maxX = Math.max(window.innerWidth - 250, margin);
-    const maxY = Math.max(window.innerHeight - 200, margin);
+    const margin = 60;
+    const maxX = Math.max(window.innerWidth - 280, margin);
+    const maxY = Math.max(document.documentElement.scrollHeight - 200, 400);
 
     targetRef.current = {
       x: margin + Math.random() * (maxX - margin),
-      y: 200 + Math.random() * Math.max(maxY - 200, 100),
+      y: 120 + Math.random() * Math.min(maxY - 120, window.innerHeight - 150),
     };
+    // Schedule next mid-walk retarget
+    nextRetargetRef.current = frameCountRef.current + 80 + Math.random() * 200;
   }, []);
 
   // Trigger a surprise action
@@ -212,16 +215,22 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
     if (initDone.current) return;
     initDone.current = true;
 
-    const margin = 40;
-    const maxX = Math.max(window.innerWidth - 250, margin);
-    const maxY = Math.max(window.innerHeight - 200, margin);
+    const margin = 60;
+    const maxX = Math.max(window.innerWidth - 280, margin);
+    const maxY = Math.max(window.innerHeight - 200, 300);
 
-    // Spread initial positions based on index
-    const startX = margin + ((index * 317) % (maxX - margin));
-    const startY = 200 + ((index * 523) % Math.max(maxY - 200, 100));
+    // Truly random starting position using Math.random
+    const startX = margin + Math.random() * (maxX - margin);
+    const startY = 120 + Math.random() * (maxY - 120);
 
     posRef.current = { x: startX, y: startY };
     speedRef.current = 0.6 + Math.random() * 0.8;
+
+    // Immediately apply initial position so it doesn't flash at 0,0
+    if (buddyRef.current) {
+      buddyRef.current.style.transform = `translate(${startX}px, ${startY}px)`;
+    }
+
     pickNewTarget();
     startAnimation();
 
@@ -256,6 +265,16 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
         doSurpriseAction();
       }
 
+      // Mid-walk direction change: pick a new target while walking
+      if (
+        frameCountRef.current > nextRetargetRef.current &&
+        actionRef.current === "walk" &&
+        stateRef.current === "walking" &&
+        dist > 30
+      ) {
+        pickNewTarget();
+      }
+
       if (dist < 8) {
         // Reached target: pause, then pick new target
         stateRef.current = "paused";
@@ -288,7 +307,7 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
         const ny = dy / dist;
 
         // Smoothing factor: higher = more responsive turning
-        const smoothing = speed > 2 ? 0.12 : 0.06;
+        const smoothing = speed > 2 ? 0.12 : 0.08;
         velocityRef.current.x += (nx * speed - velocityRef.current.x) * smoothing;
         velocityRef.current.y += (ny * speed - velocityRef.current.y) * smoothing;
 
@@ -335,6 +354,7 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
           className={`walking-buddy group ${bobbingClass}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          style={{ transform: "scale(0.8)" }}
         >
           {/* Name label on hover */}
           <div className="walking-buddy-label">
@@ -345,10 +365,12 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
             <span className="text-highlight text-[8px]">&#x2726;</span>
           </div>
 
-          {/* ASCII body */}
-          <pre className="walking-buddy-body font-mono text-[10px] sm:text-xs leading-tight whitespace-pre text-card-text select-none">
-            {textContent}
-          </pre>
+          {/* ASCII body with gradient */}
+          <div className="walking-buddy-body-wrap">
+            <pre className="walking-buddy-body font-mono text-[10px] sm:text-xs leading-tight whitespace-pre select-none">
+              {textContent}
+            </pre>
+          </div>
 
           {/* Legs + Feet */}
           <BuddyLegs isWalking={isWalking} direction={direction} action={action} />
