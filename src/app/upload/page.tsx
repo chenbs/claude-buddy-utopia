@@ -53,7 +53,7 @@ export default function UploadPage() {
   const canSubmit = !!textContent.trim() && !!name.trim();
 
   return (
-    <div className="relative max-w-lg mx-auto px-6 sm:px-8 py-16 sm:py-24 overflow-hidden">
+    <div className="relative max-w-2xl mx-auto px-6 sm:px-8 py-16 sm:py-24 overflow-hidden">
       {/* Floating sparkles */}
       <FloatingStars />
 
@@ -95,7 +95,7 @@ export default function UploadPage() {
                 className="input-field w-full px-4 py-3 bg-surface/30 border border-card-border text-sm
                            font-mono leading-relaxed placeholder:text-muted/20 resize-y whitespace-pre min-h-[320px]"
               />
-              <p className="text-card-text/30 text-[10px] italic mt-2 text-center">
+              <p className="text-card-text/30 text-[14px] italic mt-2 text-center">
                 Box-drawing characters (─ ╰ │ ╭ ╮ ╯) will be automatically removed
               </p>
             </div>
