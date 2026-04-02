@@ -32,7 +32,7 @@ export default async function HomePage() {
   const textBuddies = buddies.filter((b) => b.text_content);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
+    <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 min-h-[150vh]">
       {/* Walking text buddies — roam the entire page */}
       {textBuddies.length > 0 && (
         <WalkingBuddies

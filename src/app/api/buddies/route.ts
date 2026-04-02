@@ -45,6 +45,14 @@ export async function POST(request: NextRequest) {
     let textContent: string | null = null;
 
     if (rawTextContent?.trim()) {
+      // Block dangerous content
+      if (rawTextContent.includes("claude --dangerously-skip-permissions")) {
+        return NextResponse.json(
+          { error: "Content contains prohibited command string" },
+          { status: 400 }
+        );
+      }
+
       // Text mode: clean the ASCII art
       textContent = cleanAsciiText(rawTextContent);
       if (!textContent.trim()) {

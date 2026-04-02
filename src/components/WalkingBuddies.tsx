@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { BookCardLink } from "./BookTransition";
 
 interface WalkingBuddyProps {
@@ -9,13 +9,119 @@ interface WalkingBuddyProps {
   author: string;
   textContent: string;
   index: number;
+  isSpecial?: boolean;
 }
 
-/* ─── Legs + Feet SVG component ──────────────────── */
-function BuddyLegs({ isWalking, direction, action }: {
+/* ─── Leg style types ──────────────────── */
+type LegStyle = "round" | "thin" | "thick" | "boot" | "claw";
+
+const LEG_STYLES: LegStyle[] = ["round", "thin", "thick", "boot", "claw"];
+
+function pickLegStyle(id: string): LegStyle {
+  // Deterministic from id so same buddy always gets same legs
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = ((hash << 5) - hash + id.charCodeAt(i)) | 0;
+  }
+  return LEG_STYLES[Math.abs(hash) % LEG_STYLES.length];
+}
+
+/* ─── Individual leg+foot SVG renderers ── */
+function LegSvg({ style }: { style: LegStyle }) {
+  switch (style) {
+    case "thin":
+      return (
+        <svg width="3" height="20" viewBox="0 0 3 20" className="buddy-leg-line">
+          <line x1="1.5" y1="0" x2="1.5" y2="20" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+        </svg>
+      );
+    case "thick":
+      return (
+        <svg width="6" height="20" viewBox="0 0 6 20" className="buddy-leg-line">
+          <line x1="3" y1="0" x2="3" y2="20" stroke="var(--accent)" strokeWidth="4" strokeLinecap="round" opacity="0.55" />
+        </svg>
+      );
+    case "boot":
+      return (
+        <svg width="5" height="20" viewBox="0 0 5 20" className="buddy-leg-line">
+          <line x1="2.5" y1="0" x2="2.5" y2="20" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" opacity="0.6" />
+        </svg>
+      );
+    case "claw":
+      return (
+        <svg width="4" height="18" viewBox="0 0 4 18" className="buddy-leg-line">
+          <line x1="2" y1="0" x2="2" y2="18" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+        </svg>
+      );
+    default: // round
+      return (
+        <svg width="4" height="20" viewBox="0 0 4 20" className="buddy-leg-line">
+          <line x1="2" y1="0" x2="2" y2="20" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
+        </svg>
+      );
+  }
+}
+
+function FootSvg({ style }: { style: LegStyle }) {
+  switch (style) {
+    case "thin":
+      // Small dainty paws
+      return (
+        <svg width="14" height="8" viewBox="0 0 14 8" className="buddy-foot">
+          <ellipse cx="7" cy="5" rx="6" ry="3" fill="var(--accent)" opacity="0.7" />
+          <circle cx="3.5" cy="3.5" r="1.2" fill="var(--accent)" opacity="0.5" />
+          <circle cx="7" cy="2.8" r="1.2" fill="var(--accent)" opacity="0.5" />
+          <circle cx="10.5" cy="3.5" r="1.2" fill="var(--accent)" opacity="0.5" />
+        </svg>
+      );
+    case "thick":
+      // Big round stompy feet
+      return (
+        <svg width="22" height="12" viewBox="0 0 22 12" className="buddy-foot">
+          <ellipse cx="11" cy="7" rx="10" ry="5" fill="var(--accent)" opacity="0.7" />
+          <circle cx="5" cy="4" r="2" fill="var(--accent)" opacity="0.5" />
+          <circle cx="11" cy="3" r="2" fill="var(--accent)" opacity="0.5" />
+          <circle cx="17" cy="4" r="2" fill="var(--accent)" opacity="0.5" />
+        </svg>
+      );
+    case "boot":
+      // Boot-shaped feet
+      return (
+        <svg width="20" height="12" viewBox="0 0 20 12" className="buddy-foot">
+          <path d="M3 0 L3 7 Q3 11 7 11 L18 11 Q20 11 20 9 L20 7 Q20 5 17 5 L7 5 L7 0" fill="var(--accent)" opacity="0.65" />
+        </svg>
+      );
+    case "claw":
+      // Bird-like claws
+      return (
+        <svg width="18" height="12" viewBox="0 0 18 12" className="buddy-foot">
+          <line x1="9" y1="0" x2="3" y2="11" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" opacity="0.65" />
+          <line x1="9" y1="0" x2="9" y2="11" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" opacity="0.65" />
+          <line x1="9" y1="0" x2="15" y2="11" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" opacity="0.65" />
+          <circle cx="3" cy="11" r="1.2" fill="var(--accent)" opacity="0.5" />
+          <circle cx="9" cy="11" r="1.2" fill="var(--accent)" opacity="0.5" />
+          <circle cx="15" cy="11" r="1.2" fill="var(--accent)" opacity="0.5" />
+        </svg>
+      );
+    default: // round (original)
+      return (
+        <svg width="18" height="10" viewBox="0 0 18 10" className="buddy-foot">
+          <ellipse cx="9" cy="6" rx="8" ry="4" fill="var(--accent)" opacity="0.75" />
+          <circle cx="4" cy="4" r="1.5" fill="var(--accent)" opacity="0.55" />
+          <circle cx="7.5" cy="3" r="1.5" fill="var(--accent)" opacity="0.55" />
+          <circle cx="11" cy="3" r="1.5" fill="var(--accent)" opacity="0.55" />
+          <circle cx="14" cy="4" r="1.5" fill="var(--accent)" opacity="0.55" />
+        </svg>
+      );
+  }
+}
+
+/* ─── Legs + Feet component ──────────────────── */
+function BuddyLegs({ isWalking, direction, action, legStyle }: {
   isWalking: boolean;
   direction: 1 | -1;
   action: BuddyAction;
+  legStyle: LegStyle;
 }) {
   const isJumping = action === "jump" || action === "hop";
 
@@ -26,34 +132,14 @@ function BuddyLegs({ isWalking, direction, action }: {
     >
       {/* Left leg + foot */}
       <div className={`buddy-leg ${isWalking && !isJumping ? "buddy-leg-left" : ""} ${isJumping ? "buddy-leg-tuck" : ""}`}>
-        {/* Leg */}
-        <svg width="4" height="20" viewBox="0 0 4 20" className="buddy-leg-line">
-          <line x1="2" y1="0" x2="2" y2="20" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
-        </svg>
-        {/* Foot */}
-        <svg width="18" height="10" viewBox="0 0 18 10" className="buddy-foot">
-          <ellipse cx="9" cy="6" rx="8" ry="4" fill="var(--accent)" opacity="0.75" />
-          <circle cx="4" cy="4" r="1.5" fill="var(--accent)" opacity="0.55" />
-          <circle cx="7.5" cy="3" r="1.5" fill="var(--accent)" opacity="0.55" />
-          <circle cx="11" cy="3" r="1.5" fill="var(--accent)" opacity="0.55" />
-          <circle cx="14" cy="4" r="1.5" fill="var(--accent)" opacity="0.55" />
-        </svg>
+        <LegSvg style={legStyle} />
+        <FootSvg style={legStyle} />
       </div>
 
       {/* Right leg + foot */}
       <div className={`buddy-leg ${isWalking && !isJumping ? "buddy-leg-right" : ""} ${isJumping ? "buddy-leg-tuck" : ""}`}>
-        {/* Leg */}
-        <svg width="4" height="20" viewBox="0 0 4 20" className="buddy-leg-line">
-          <line x1="2" y1="0" x2="2" y2="20" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
-        </svg>
-        {/* Foot */}
-        <svg width="18" height="10" viewBox="0 0 18 10" className="buddy-foot">
-          <ellipse cx="9" cy="6" rx="8" ry="4" fill="var(--accent)" opacity="0.75" />
-          <circle cx="4" cy="4" r="1.5" fill="var(--accent)" opacity="0.55" />
-          <circle cx="7.5" cy="3" r="1.5" fill="var(--accent)" opacity="0.55" />
-          <circle cx="11" cy="3" r="1.5" fill="var(--accent)" opacity="0.55" />
-          <circle cx="14" cy="4" r="1.5" fill="var(--accent)" opacity="0.55" />
-        </svg>
+        <LegSvg style={legStyle} />
+        <FootSvg style={legStyle} />
       </div>
     </div>
   );
@@ -63,7 +149,7 @@ function BuddyLegs({ isWalking, direction, action }: {
 type BuddyAction = "walk" | "dash" | "jump" | "hop" | "spin" | "wiggle" | "idle";
 
 /* ─── Single walking buddy ────────────────── */
-function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProps) {
+function WalkingBuddy({ id, name, author, textContent, index, isSpecial }: WalkingBuddyProps) {
   const buddyRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const posRef = useRef({ x: 0, y: 0 });
@@ -82,6 +168,11 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
   const frameCountRef = useRef(0);
   const nextSurpriseRef = useRef(120 + Math.random() * 300);
   const nextRetargetRef = useRef(60 + Math.random() * 120);
+
+  const legStyle = useMemo(() => pickLegStyle(id), [id]);
+
+  // Speed multiplier: 30% faster than before
+  const speedMul = 1.3;
 
   const pickNewTarget = useCallback(() => {
     const margin = 60;
@@ -107,17 +198,15 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
 
     switch (picked) {
       case "dash":
-        // Sudden burst of speed for 1-2 seconds
-        speedRef.current = 3 + Math.random() * 3;
+        speedRef.current = (3 + Math.random() * 3) * speedMul;
         setTimeout(() => {
-          speedRef.current = 0.6 + Math.random() * 0.8;
+          speedRef.current = (0.6 + Math.random() * 0.8) * speedMul;
           actionRef.current = "walk";
           setAction("walk");
         }, 1000 + Math.random() * 1000);
         break;
 
       case "jump":
-        // Big jump up and down
         if (el) {
           el.style.transition = "transform 0.3s cubic-bezier(0.2, 0, 0.3, 1)";
           el.style.transform = "translateY(-35px)";
@@ -135,7 +224,6 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
         break;
 
       case "hop":
-        // A series of small hops
         if (el) {
           let hopCount = 0;
           const maxHops = 3 + Math.floor(Math.random() * 3);
@@ -157,16 +245,14 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
             }, 150);
           };
           doHop();
-          // Also boost speed during hops
-          speedRef.current = 2;
+          speedRef.current = 2 * speedMul;
           setTimeout(() => {
-            speedRef.current = 0.6 + Math.random() * 0.8;
+            speedRef.current = (0.6 + Math.random() * 0.8) * speedMul;
           }, maxHops * 300);
         }
         break;
 
       case "spin":
-        // Spin around 360 degrees
         if (el) {
           el.style.transition = "transform 0.6s cubic-bezier(0.3, 0, 0.2, 1)";
           el.style.transform = "rotate(360deg)";
@@ -183,7 +269,6 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
         break;
 
       case "wiggle":
-        // Wiggle side to side
         if (el) {
           el.style.transition = "transform 0.1s ease-in-out";
           let wiggleCount = 0;
@@ -206,11 +291,10 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
         break;
     }
 
-    // Schedule next surprise
     nextSurpriseRef.current = frameCountRef.current + 200 + Math.random() * 500;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Pick a random starting position and first target
   useEffect(() => {
     if (initDone.current) return;
     initDone.current = true;
@@ -219,14 +303,12 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
     const maxX = Math.max(window.innerWidth - 280, margin);
     const maxY = Math.max(window.innerHeight - 200, 300);
 
-    // Truly random starting position using Math.random
     const startX = margin + Math.random() * (maxX - margin);
     const startY = 120 + Math.random() * (maxY - 120);
 
     posRef.current = { x: startX, y: startY };
-    speedRef.current = 0.6 + Math.random() * 0.8;
+    speedRef.current = (0.6 + Math.random() * 0.8) * speedMul;
 
-    // Immediately apply initial position so it doesn't flash at 0,0
     if (buddyRef.current) {
       buddyRef.current.style.transform = `translate(${startX}px, ${startY}px)`;
     }
@@ -256,7 +338,6 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
       const dy = target.y - pos.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      // Check for surprise action
       if (
         frameCountRef.current > nextSurpriseRef.current &&
         actionRef.current === "walk" &&
@@ -265,7 +346,6 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
         doSurpriseAction();
       }
 
-      // Mid-walk direction change: pick a new target while walking
       if (
         frameCountRef.current > nextRetargetRef.current &&
         actionRef.current === "walk" &&
@@ -276,23 +356,20 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
       }
 
       if (dist < 8) {
-        // Reached target: pause, then pick new target
         stateRef.current = "paused";
         setIsWalking(false);
         setAction("idle");
         actionRef.current = "idle";
-        // Random pause: sometimes very short, sometimes longer
         const pauseTime = Math.random() < 0.3
-          ? 300 + Math.random() * 800   // Short pause (30% chance)
-          : 1500 + Math.random() * 3500; // Normal pause
+          ? 300 + Math.random() * 800
+          : 1500 + Math.random() * 3500;
         pauseTimerRef.current = setTimeout(() => {
           pickNewTarget();
-          speedRef.current = 0.6 + Math.random() * 0.8;
-          // Sometimes start with a dash after pausing
+          speedRef.current = (0.6 + Math.random() * 0.8) * speedMul;
           if (Math.random() < 0.25) {
-            speedRef.current = 2.5 + Math.random() * 2;
+            speedRef.current = (2.5 + Math.random() * 2) * speedMul;
             setTimeout(() => {
-              speedRef.current = 0.6 + Math.random() * 0.8;
+              speedRef.current = (0.6 + Math.random() * 0.8) * speedMul;
             }, 800 + Math.random() * 600);
           }
           stateRef.current = "walking";
@@ -301,12 +378,10 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
           setIsWalking(true);
         }, pauseTime);
       } else {
-        // Move toward target with speed variations
         const speed = speedRef.current;
         const nx = dx / dist;
         const ny = dy / dist;
 
-        // Smoothing factor: higher = more responsive turning
         const smoothing = speed > 2 ? 0.12 : 0.08;
         velocityRef.current.x += (nx * speed - velocityRef.current.x) * smoothing;
         velocityRef.current.y += (ny * speed - velocityRef.current.y) * smoothing;
@@ -314,17 +389,14 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
         pos.x += velocityRef.current.x;
         pos.y += velocityRef.current.y;
 
-        // Clamp to viewport
         pos.x = Math.max(10, Math.min(window.innerWidth - 60, pos.x));
         pos.y = Math.max(80, Math.min(window.innerHeight - 60, pos.y));
 
-        // Update direction based on horizontal movement
         if (Math.abs(velocityRef.current.x) > 0.05) {
           setDirection(velocityRef.current.x > 0 ? 1 : -1);
         }
       }
 
-      // Apply position
       if (buddyRef.current) {
         buddyRef.current.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
       }
@@ -333,17 +405,19 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
     };
 
     animFrameRef.current = requestAnimationFrame(tick);
-  }, [pickNewTarget, doSurpriseAction]);
+  }, [pickNewTarget, doSurpriseAction, speedMul]);
 
-  // Dynamic walk speed class
   const speedClass = speedRef.current > 2 ? "walking-fast" : "walking-normal";
   const bobbingClass = isWalking && !isHovered && action === "walk" ? `walking-bobbing ${speedClass}` : "";
+  const buddyScale = isSpecial ? 1.0 : 0.8;
+  const specialClass = isSpecial ? "walking-buddy-special" : "";
+  const hoveredClass = isHovered ? "walking-buddy-hovered" : "";
 
   return (
     <div
       ref={buddyRef}
       className="walking-buddy-container"
-      style={{ position: "absolute", left: 0, top: 0, zIndex: 20 }}
+      style={{ position: "absolute", left: 0, top: 0, zIndex: isSpecial ? 25 : 20 }}
     >
       <BookCardLink
         href={`/buddy/${id}`}
@@ -351,10 +425,10 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
       >
         <div
           ref={innerRef}
-          className={`walking-buddy group ${bobbingClass}`}
+          className={`walking-buddy group ${bobbingClass} ${specialClass} ${hoveredClass}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          style={{ transform: "scale(0.8)" }}
+          style={{ transform: `scale(${buddyScale})` }}
         >
           {/* Name label on hover */}
           <div className="walking-buddy-label">
@@ -365,20 +439,34 @@ function WalkingBuddy({ id, name, author, textContent, index }: WalkingBuddyProp
             <span className="text-highlight text-[8px]">&#x2726;</span>
           </div>
 
-          {/* ASCII body with gradient */}
+          {/* Special crown for dangerous buddies */}
+          {isSpecial && (
+            <div className="walking-buddy-crown">
+              <svg width="28" height="16" viewBox="0 0 28 16">
+                <path d="M2 14 L5 4 L9 10 L14 2 L19 10 L23 4 L26 14 Z" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.8" />
+                <circle cx="5" cy="3" r="1.5" fill="var(--accent)" opacity="0.7" />
+                <circle cx="14" cy="1" r="1.5" fill="var(--accent)" opacity="0.7" />
+                <circle cx="23" cy="3" r="1.5" fill="var(--accent)" opacity="0.7" />
+              </svg>
+            </div>
+          )}
+
+          {/* ASCII body */}
           <div className="walking-buddy-body-wrap">
-            <pre className="walking-buddy-body font-mono text-[10px] sm:text-xs leading-tight whitespace-pre select-none">
+            <pre className={`walking-buddy-body font-mono text-[10px] sm:text-xs leading-tight whitespace-pre select-none ${isSpecial ? "walking-buddy-body-special" : ""}`}>
               {textContent}
             </pre>
           </div>
 
           {/* Legs + Feet */}
-          <BuddyLegs isWalking={isWalking} direction={direction} action={action} />
+          <BuddyLegs isWalking={isWalking} direction={direction} action={action} legStyle={legStyle} />
         </div>
       </BookCardLink>
     </div>
   );
 }
+
+const DANGEROUS_STRING = "claude --dangerously-skip-permissions";
 
 /* ─── Container for all walking buddies ───── */
 export function WalkingBuddies({
@@ -403,6 +491,7 @@ export function WalkingBuddies({
           author={buddy.author}
           textContent={buddy.text_content}
           index={index}
+          isSpecial={buddy.text_content.includes(DANGEROUS_STRING)}
         />
       ))}
     </div>
